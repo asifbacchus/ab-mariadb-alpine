@@ -37,7 +37,9 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
 
     # create system tables
     printf "DB-CREATE: Setting up mySQL system tables\n"
-    mysql_install_db --user=mysql --ldata=/var/lib/mysql > /dev/null
+    if (! mysql_install_db --user=mysql --ldata=/var/lib/mysql > /dev/null); then
+        exit 1
+    fi
 
     # statement to create new SQL database
     printf "DB-CREATE: Generating SQL database create statement for '%s'\n" "$MYSQL_DATABASE"
@@ -63,8 +65,10 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
 
     # execute statements against mariadb and cleanup
     printf "DB-CREATE: Bootstrapping mySQL database\n"
-    mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$sqlCmd"
-    rm -f "$sqlCmd"
+    if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$sqlCmd"); then
+        exit 1
+    fi
+    #rm -f "$sqlCmd"
 else
     # files exist, ignore the request to create a database
     printf "DB-CREATE: NOT creating %s\n" "$MYSQL_DATABASE"
