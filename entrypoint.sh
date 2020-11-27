@@ -115,6 +115,7 @@ done
 
 # execute commands passed to this container
 printf "\nInitialization complete... Container ready...\n"
+printf "(sql root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
 exec "$@"
 
 #EOF
