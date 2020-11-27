@@ -77,7 +77,7 @@ else
 fi
 
 # process supplied SQL files in /docker-entrypoint-initdb.d/*.(sql|sql.gz)
-for f in /docker-entrypoint-initdb.d/*.sh; do
+for f in /docker-entrypoint-initdb.d/*; do
     case "$f" in
         *.sql)
             if [ -s "$f" ]; then
