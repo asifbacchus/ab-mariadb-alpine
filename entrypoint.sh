@@ -41,7 +41,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
 
     # statement to create new SQL database
     printf "DB-CREATE: Generating SQL database create statement for '%s'\n" "$MYSQL_DATABASE"
-    echo "CREATE DATABASE IF NOT EXISTS \'$MYSQL_DATABASE\' CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATION;" >> "$sqlCmd"
+    echo "CREATE DATABASE IF NOT EXISTS '$MYSQL_DATABASE' CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATION;" >> "$sqlCmd"
 
     # statements to:
     # cleanup permissions:
@@ -55,7 +55,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' WITH GRANT OPTION;" >> "$sqlCmd"
     if [ -n "$MYSQL_USER" ] && [ -n "$MYSQL_PASSWORD" ]; then
         printf "DB-CREATE: Generating SQL permissions statement for '%s'\n" "$MYSQL_USER"
-        echo "GRANT ALL ON \'$MYSQL_DATABASE\'.* TO \'$MYSQL_USER\'@'%' IDENTIFIED BY \'$MYSQL_PASSWORD\';" >> "$sqlCmd"
+        echo "GRANT ALL ON '$MYSQL_DATABASE'.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" >> "$sqlCmd"
     fi
     printf "DB-CREATE: Generating statement to drop 'test' table\n"
     echo 'DROP DATABASE IF EXISTS test;' >> "$sqlCmd"
