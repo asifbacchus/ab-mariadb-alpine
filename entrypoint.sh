@@ -53,7 +53,6 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     #   add root@% with password authentication
     # create SQL user if requested
     # remove 'test' table
-    # //printf "USE mysql;\n" >> "$sqlCmd"
     printf "FLUSH PRIVILEGES;\n" >> "$sqlCmd"
     printf "DB-CREATE: Generating SQL permissions statement for 'root@%%'\n"
     printf "GRANT ALL ON *.* TO 'root'@'%%' IDENTIFIED BY '%s' WITH GRANT OPTION;\n" "$MYSQL_ROOT_PASSWORD" >> "$sqlCmd"
