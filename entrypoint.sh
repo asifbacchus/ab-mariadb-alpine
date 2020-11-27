@@ -69,7 +69,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$sqlCmd"); then
         exit 1
     fi
-    #rm -f "$sqlCmd"
+    shred -u "$sqlCmd"
 else
     # files exist, ignore the request to create a database
     printf "DB-CREATE: NOT creating %s\n" "$MYSQL_DATABASE"
