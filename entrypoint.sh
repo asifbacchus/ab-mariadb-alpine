@@ -57,7 +57,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
         printf "DB-CREATE: Generating SQL permissions statement for '%s'\n" "$MYSQL_USER"
         echo "GRANT ALL ON \'$MYSQL_DATABASE\'.* TO \'$MYSQL_USER\'@'%' IDENTIFIED BY \'$MYSQL_PASSWORD\';" >> "$sqlCmd"
     fi
-    printf "DB-CREATE: Cleaning up 'test' table\n"
+    printf "DB-CREATE: Generating statement to drop 'test' table\n"
     echo 'DROP DATABASE IF EXISTS test;' >> "$sqlCmd"
     echo 'FLUSH PRIVILEGES;' >> "$sqlCmd"
 
