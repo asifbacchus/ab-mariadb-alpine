@@ -6,7 +6,7 @@ FROM alpine:3.12
 
 # standardized labels
 LABEL maintainer="Asif Bacchus <asif@bacchus.cloud>"
-LABEL org.label-schema.cmd="docker run -d --name db [-e TZ=Etc/UTC] docker.asifbacchus.app/mariadb/mariadb-alpine:latest"
+LABEL org.label-schema.cmd="docker run -d --name db [-e TZ=Etc/UTC -e MYSQL_UID=8100 -e MYSQL_GID=8100 -e MYSQL_ROOT_PASSWORD=... -e MYSQL_DATABASE='myData' -e MYSQL_CHARSET='utf8mb4' -e MYSQL_COLLATION='utf8mb4_general_ci' -e MYSQL_USER=... -e MYSQL_PASSWORD=...] docker.asifbacchus.app/mariadb/mariadb-alpine:latest"
 LABEL org.label-schema.description="mariadb running on Alpine Linux."
 LABEL org.label-schema.name="mariadb-alpine"
 LABEL org.label-schema.schema-version="1.0"
