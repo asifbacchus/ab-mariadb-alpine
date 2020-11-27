@@ -21,7 +21,9 @@ chown -R mysql:mysql /var/lib/mysql
 for f in /docker-entrypoint-preinit.d/*.sh; do
     if [ -s "$f" ]; then
         printf "PRE-INIT: Executing %s\n" "$f"
-        /bin/sh "$f"
+        if (! /bin/sh "$f"); then
+            exit 2
+        fi
     fi
 done
 
@@ -81,19 +83,23 @@ for f in /docker-entrypoint-initdb.d/*.sh; do
         *.sql)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"
+                if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"); then
+                    exit 3
+                fi
                 printf "\n"
             fi
             ;;
         *.sql.gz)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0
+                if (! gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0); then
+                    exit 3
+                fi
                 printf "\n"
             fi
             ;;
         *)
-            printf "IMPORT-SQL: Cannot import %s\n" "$f"
+            printf "IMPORT-SQL: Cannot import %s -- skipping\n" "$f"
             ;;
     esac
 done
@@ -102,7 +108,9 @@ done
 for f in /docker-entrypoint-postinit.d/*.sh; do
     if [ -s "$f" ]; then
         printf "POST-INIT: Executing %s\n" "$f"
-        /bin/sh "$f"
+        if (! /bin/sh "$f"); then
+            exit 4
+        fi
     fi
 done
 
