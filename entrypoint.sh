@@ -41,7 +41,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
 
     # statement to create new SQL database
     printf "DB-CREATE: Generating SQL database create statement for '%s'\n" "$MYSQL_DATABASE"
-    echo "CREATE DATABASE IF NOT EXISTS '$MYSQL_DATABASE' CHARACTER SET $MYSQL_CHARSET COLLATE $MYSQL_COLLATION;" >> "$sqlCmd"
+    printf "CREATE DATABASE IF NOT EXISTS '%s' CHARACTER SET %s COLLATE %s;" "$MYSQL_DATABASE" "$MYSQL_CHARSET" "$MYSQL_COLLATION" >> "$sqlCmd"
 
     # statements to:
     # cleanup permissions:
@@ -49,17 +49,17 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     #   add root@% with password authentication
     # create SQL user if requested
     # remove 'test' table
-    echo 'USE mysql;' >> "$sqlCmd"
-    echo 'FLUSH PRIVILEGES;' >> "$sqlCmd"
+    printf 'USE mysql;' >> "$sqlCmd"
+    printf 'FLUSH PRIVILEGES;' >> "$sqlCmd"
     printf "DB-CREATE: Generating SQL permissions statement for 'root@%%'\n"
-    echo "GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD' WITH GRANT OPTION;" >> "$sqlCmd"
+    printf "GRANT ALL ON *.* TO 'root'@'%%' IDENTIFIED BY '%s' WITH GRANT OPTION;" "$MYSQL_ROOT_PASSWORD" >> "$sqlCmd"
     if [ -n "$MYSQL_USER" ] && [ -n "$MYSQL_PASSWORD" ]; then
         printf "DB-CREATE: Generating SQL permissions statement for '%s'\n" "$MYSQL_USER"
-        echo "GRANT ALL ON '$MYSQL_DATABASE'.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';" >> "$sqlCmd"
+        printf "GRANT ALL ON '%s'.* TO '%s'@'%%' IDENTIFIED BY '%s';" "$MYSQL_DATABASE" "$MYSQL_USER" "$MYSQL_PASSWORD" >> "$sqlCmd"
     fi
     printf "DB-CREATE: Generating statement to drop 'test' table\n"
-    echo 'DROP DATABASE IF EXISTS test;' >> "$sqlCmd"
-    echo 'FLUSH PRIVILEGES;' >> "$sqlCmd"
+    printf 'DROP DATABASE IF EXISTS test;' >> "$sqlCmd"
+    printf 'FLUSH PRIVILEGES;' >> "$sqlCmd"
 
     # execute statements against mariadb and cleanup
     printf "DB-CREATE: Bootstrapping mySQL database\n"
