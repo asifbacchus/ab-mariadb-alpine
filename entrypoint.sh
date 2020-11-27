@@ -84,7 +84,7 @@ for f in /docker-entrypoint-initdb.d/*.sh; do
         *.sql.gz)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"
+                gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0
                 printf "\n"
             fi
             ;;
