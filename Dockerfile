@@ -28,8 +28,6 @@ EXPOSE 3306
 # create volume if user forgets
 VOLUME ["/var/lib/mysql"]
 
-# copy scripts and make pre-exec and post-exec directories
-
 # set environment variables
 ENV TZ=Etc/UTC
 ENV MYSQL_UID=8100
@@ -41,9 +39,12 @@ ENV MYSQL_COLLATION='utf8mb4_general_ci'
 ENV MYSQL_USER=''
 ENV MYSQL_PASSWORD=''
 
+# copy scripts and make pre-exec and post-exec directories
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-CMD [ "" ]
+CMD [ "/usr/bin/mysqld", "--user=mysql", "--console", "--skip-name-resolve", "--skip-networking=0" ]
 
 # add build date and version labels
 ARG BUILD_DATE
