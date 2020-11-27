@@ -20,7 +20,6 @@ RUN apk --no-cache add \
     mariadb \
     mariadb-client \
     mariadb-server-utils \
-    pwgen \
     && rm -f /var/cache/apk/*
 
 # expose ports
