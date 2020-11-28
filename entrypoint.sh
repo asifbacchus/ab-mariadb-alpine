@@ -7,6 +7,16 @@ convertCase () {
     printf "%s" "$1" | tr "[:lower:]" "[:upper:]"
 }
 
+isInt () {
+    if ! [ "$1" -eq "$1" ] 2>/dev/null; then
+        # not a valid integer, return -1
+        echo -1
+    else
+        # valid integer, return it
+        echo "$1"
+    fi
+}
+
 # instantiate variables
 sqlCmd='/tmp/cmd.sql'
 
