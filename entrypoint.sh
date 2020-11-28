@@ -57,7 +57,7 @@ chown -R mysql:mysql /var/lib/mysql
 
 # skip DNS reverse name resolution if option is set (default)
 if [ "$MYSQL_SKIP_NAME_RESOLVE" = 'TRUE' ]; then
-    printf "Turning reverse DNS name resolution OFF"
+    printf "Turning reverse DNS name resolution OFF\n"
     sed -i '/^\[mysqld\]$/a skip-name-resolve' /etc/my.cnf.d/mariadb-server.cnf
 fi
 
