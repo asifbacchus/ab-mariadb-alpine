@@ -98,7 +98,6 @@ for f in /docker-entrypoint-initdb.d/*; do
             fi
             ;;
         *)
-            printf "IMPORT-SQL: Cannot import %s -- skipping\n" "$f"
             ;;
     esac
 done
