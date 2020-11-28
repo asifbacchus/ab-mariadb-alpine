@@ -1,9 +1,9 @@
 # MariaDB on Alpine Linux (dockerized)
 
-Fully functional dockerized installation of MariaDB running on Alpine Linux. This installation is roughly half the size of the official MariaDB container which runs on Ubuntu! This container aims to mimic all the features of the official MariaDB container plus a few extra ;-)
+Fully functional dockerized installation of MariaDB server and client running on Alpine Linux. This container is roughly half the size of the official MariaDB container which runs on Ubuntu but still aims to mimic all its features while adding a few extra ;-)
 
 - [Quick Start](#quick-start)
-  - [Pull in the image](#pull-in-the-image)
+  - [Pull the image](#pull-the-image)
   - [Run the image](#run-the-image)
   - [Create a database](#create-a-database)
     - [Root password](#root-password)
@@ -33,7 +33,7 @@ Fully functional dockerized installation of MariaDB running on Alpine Linux. Thi
 
 ## Quick Start
 
-### Pull in the image
+### Pull the image
 
 The latest images are on my private Docker Repo but I also try to keep the ones on Dockerhub updated within a few days. As such, you have two choices:
 
@@ -49,9 +49,11 @@ or
 docker pull asifbacchus/ab-mariadb-alpine:latest
 ```
 
+All the examples in this document will refer to my repo, but you can use Dockerhub if you prefer.
+
 ### Run the image
 
-The image has sensible defaults and can be run without setting many environment variables. Here's an example using a few common options which are detailed below. In this example, we will start MariaDB server and create an empty database called 'CompanyX', set a root password and create a user account for Jane Doe which has *full privileges* for the *CompanyX* database. Data will be stored in the named volume 'companyDB'.
+The image has sensible defaults and can be run without setting many environment variables. In the example below, we will start MariaDB server and create an empty database called 'CompanyX', set a root password and create a user account for Jane Doe which has *full privileges* for the *CompanyX* database. Data will be stored in the named volume 'companyDB'.
 
 ```bash
 docker run -d \
@@ -127,7 +129,7 @@ Please note this is an *Alpine Linux* container so it uses the ASH shell. This i
 
 ## Checking Logs
 
-The container logs everything to the console, so the best way to check logs is via the docker logs command:
+The container logs everything to the console, so the best way to check logs is via the `docker logs` command:
 
 ```bash
 # get default lookback period of logs
@@ -159,7 +161,7 @@ Most container configuration is accomplished via environment variables. We've al
 
 |Variable|Default|Description|
 |---|:---:|---|
-MYSQL_SKIP_NAME_RESOLVE|TRUE|This will tell MariaDB NOT to run reverse DNS lookups on connecting hosts. As a result, user accounts should be defined by IP address versus hostname. This is the default setting for Docker containers since their hostnames don't make much sense unless explicitly set. Setting this to 'FALSE' will allow you to use hostnames in user account definitions. [TRUE|FALSE]|
+MYSQL_SKIP_NAME_RESOLVE|TRUE|This will tell MariaDB NOT to run reverse DNS lookups on connecting hosts. As a result, user accounts should be defined by IP address versus hostname. This is the default setting for Docker containers. since their hostnames don't make much sense unless explicitly set. Setting this to 'FALSE' will allow you to use hostnames in user account definitions. [TRUE|FALSE]|
 |MYSQL_CHARSET|utf8mb4|Character Set for the newly created database. Will NOT affect existing or imported databases.|
 |MYSQL_COLLATION|utf8mb4_general_ci|Collation rules for the newly created database. Will NOT affect existing or imported databases.|
 |MYSQL_ROOT_PASSWORD|auto-generated|Sets the *root* password for your MariaDB server. If you leave this blank (default) the container will generate a password for you and display it in the logs. In practice, you should really define this yourself. **This will be ignored if you are mounting a volume/directory with an existing database.** Please refer to the [Root Account](#root-account) section for some interesting notes.|

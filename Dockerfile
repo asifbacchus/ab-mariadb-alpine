@@ -17,7 +17,6 @@ LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/mariadb-al
 # install mariadb and turn on TCP connection in default config
 RUN apk --no-cache add \
     tzdata \
-    iputils \
     mariadb \
     mariadb-client \
     mariadb-server-utils \
