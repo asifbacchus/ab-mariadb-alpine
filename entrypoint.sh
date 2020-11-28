@@ -112,9 +112,24 @@ for f in /docker-entrypoint-postinit.d/*.sh; do
     fi
 done
 
-# execute commands passed to this container
+# note initialization complete and display root password
 printf "\nInitialization complete...\n"
-printf "(sql root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
-exec "$@"
+printf "(mySQL root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
 
+# process CMD sent to this container
+case "$1" in
+    -*)
+        # param starts with '-' --> assume mysqld options and append to CMD
+        set -- /usr/bin/mysqld --user=mysql --console --skip-name-resolve --skip-networking=0 "$@"
+        printf "\nExecuting: %s\n" "$*"
+        exec "$@"
+        ;;
+    *)
+        # param does NOT start with '-' --> execute as given
+        printf "\nExecuting: %s\n" "$@"
+        exec "$@"
+        ;;
+esac
+
+exit 0
 #EOF
