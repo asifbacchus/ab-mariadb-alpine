@@ -20,7 +20,7 @@ if ! [ "$MYSQL_UID" -eq "$MYSQL_UID" ]; then
 else
     printf "Setting mysql UID to %s\n" "$MYSQL_UID"
 fi
-if ! [ $MYSQL_GID -eq "$MYSQL_UID" ]; then
+if ! [ "$MYSQL_GID" -eq "$MYSQL_UID" ]; then
     printf "'%s' is not a valid value for MYSQL_GID\n" "$MYSQL_UID"
     exit 1
 else
