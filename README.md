@@ -336,7 +336,7 @@ docker exec -it container_name /bin/sh -c 'exec mysql -uroot -p"SuPeR$ecurEP@$$w
 
 ## Source
 
-The source for this container build (Dockerfile, entrypoint.sh) are available on my [private git repo](https://git.asifbacchus.app/ab-docker/mariadb-alpine) or on [GitHub](https://github.com/asifbacchus/mariadb-alpine). Note that the newest versions will be on my repo and GitHub will be updated at most a few days later. Also, I'd prefer issues be filed on my repo, but I understand if GitHub is easier/more familiar for you.
+The source for this container build (Dockerfile, entrypoint.sh) are available on my [private git repo](https://git.asifbacchus.app/ab-docker/mariadb-alpine) or on [GitHub](https://github.com/asifbacchus/ab-mariadb-alpine.git). Note that the newest versions will be on my repo and GitHub will be updated at most a few days later. Also, I'd prefer issues be filed on my repo, but I understand if GitHub is easier/more familiar for you.
 
 ## Final Thoughts
 
