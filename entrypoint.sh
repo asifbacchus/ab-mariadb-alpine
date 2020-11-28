@@ -3,6 +3,10 @@
 ### entrypoint script for mariadb container
 #
 
+convertCase () {
+    printf "%s" "$1" | tr "[:lower:]" "[:upper:]"
+}
+
 # instantiate variables
 sqlCmd='/tmp/cmd.sql'
 
