@@ -23,6 +23,9 @@ sqlCmd='/tmp/cmd.sql'
 # convert env variables to uppercase for proper string comparison
 MYSQL_SKIP_NAME_RESOLVE=$(convertCase "$MYSQL_SKIP_NAME_RESOLVE")
 
+# write initialization message
+printf "\nInitializing mariadb container...\n"
+
 # verify environment variables have valid values
 if [ "$(isInt "$MYSQL_UID")" -ge 0 ]; then
     printf "Setting mysql UID to %s\n" "$MYSQL_UID"
