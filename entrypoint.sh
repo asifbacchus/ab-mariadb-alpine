@@ -164,13 +164,13 @@ printf "(mySQL root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
 case "$1" in
     -*)
         # param starts with '-' --> assume mysqld parameter(s) and append to CMD
-        set -- /usr/bin/mysqld --user=mysql --console "$@"
+        set -- /usr/bin/mysqld --user=mysql --console "$*"
         printf "\nExecuting: %s\n" "$*"
         exec "$@"
         ;;
     *)
         # param does NOT start with '-' --> execute as given
-        printf "\nExecuting: %s\n" "$@"
+        printf "\nExecuting: %s\n" "$*"
         exec "$@"
         ;;
 esac
