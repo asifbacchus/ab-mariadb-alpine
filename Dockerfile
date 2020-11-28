@@ -20,8 +20,8 @@ RUN apk --no-cache add \
     mariadb \
     mariadb-client \
     mariadb-server-utils \
-    sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf \
-    && rm -f /var/cache/apk/*
+    && rm -f /var/cache/apk/* \
+    && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
 # expose ports
 EXPOSE 3306
