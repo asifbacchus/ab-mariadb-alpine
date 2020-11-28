@@ -50,7 +50,7 @@ RUN mkdir -p /docker-entrypoint-preinit.d \
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-CMD [ "/usr/bin/mysqld", "--user=mysql", "--console", "--skip-name-resolve" ]
+CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 
 # add build date and version labels
 ARG BUILD_DATE
