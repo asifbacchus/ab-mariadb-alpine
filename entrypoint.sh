@@ -119,8 +119,8 @@ printf "(mySQL root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
 # process CMD sent to this container
 case "$1" in
     -*)
-        # param starts with '-' --> assume mysqld options and append to CMD
-        set -- /usr/bin/mysqld --user=mysql --console --skip-name-resolve --skip-networking=0 "$@"
+        # param starts with '-' --> assume mysqld parameter(s) and append to CMD
+        set -- /usr/bin/mysqld --user=mysql --console --skip-name-resolve "$@"
         printf "\nExecuting: %s\n" "$*"
         exec "$@"
         ;;

@@ -14,12 +14,13 @@ LABEL org.label-schema.url="https://git.asifbacchus.app/ab-docker/mariadb-alpine
 LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/mariadb-alpine/wiki"
 LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/mariadb-alpine.git"
 
-# install mariadb
+# install mariadb and turn on TCP connection in default config
 RUN apk --no-cache add \
     tzdata \
     mariadb \
     mariadb-client \
     mariadb-server-utils \
+    sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf \
     && rm -f /var/cache/apk/*
 
 # expose ports
@@ -48,7 +49,7 @@ RUN mkdir -p /docker-entrypoint-preinit.d \
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-CMD [ "/usr/bin/mysqld", "--user=mysql", "--console", "--skip-name-resolve", "--skip-networking=0" ]
+CMD [ "/usr/bin/mysqld", "--user=mysql", "--console", "--skip-name-resolve" ]
 
 # add build date and version labels
 ARG BUILD_DATE
