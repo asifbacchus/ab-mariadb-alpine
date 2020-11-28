@@ -45,7 +45,7 @@ chown -R mysql:mysql /var/lib/mysql
 
 # skip DNS reverse name resolution if option is set (default)
 if [ "$MYSQL_SKIP_NAME_RESOLVE" = 'TRUE' ]; then
-    sed -i '/^[mysqld]$/a skip-name-resolve' /etc/my.cnf.d/mariadb-server.cnf
+    sed -i '/^\[mysqld\]$/a skip-name-resolve' /etc/my.cnf.d/mariadb-server.cnf
 fi
 
 # execute pre-init scripts: /docker-entrypoint-preinit.d/*.sh
