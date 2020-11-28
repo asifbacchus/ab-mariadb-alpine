@@ -54,4 +54,4 @@ CMD [ "/usr/bin/mysqld", "--user=mysql", "--console", "--skip-name-resolve", "--
 ARG BUILD_DATE
 LABEL org.label-schema.build-date=${BUILD_DATE}
 LABEL org.label-schema.vendor="mariaDB (10.5.6-r0)"
-LABEL org.label-schema.version="0.1"
+LABEL org.label-schema.version="1.0"
