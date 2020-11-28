@@ -7,9 +7,33 @@ convertCase () {
     printf "%s" "$1" | tr "[:lower:]" "[:upper:]"
 }
 
+testInteger () {
+    if ! [ "$1" -eq "$1" ] 2>/dev/null; then
+        return 0
+    else
+        return "$1"
+    fi
+}
+
 # instantiate variables
 sqlCmd='/tmp/cmd.sql'
 
+# convert env variables to uppercase for proper string comparison
+SKIP_NAME_RESOLVE=$(convertCase "$SKIP_NAME_RESOLVE")
+
+# verify environment variables have valid values
+if [ "$(testInteger $MYSQL_UID)" -gt 0 ]; then
+    printf "Setting mysql UID to %s\n" "$MYSQL_UID"
+else
+    printf "'%s' is not a valid value for MYSQL_UID\n" "$MYSQL_UID"
+    exit 1
+fi
+if [ "$(testInteger $MYSQL_GID)" -gt 0 ]; then
+    printf "Setting mysql GID to %s\n" "$MYSQL_GID"
+else
+    printf "'%s' is not a valid value for MYSQL_GID\n" "$MYSQL_UID"
+    exit 1
+fi
 # generate root password if not specified
 if [ -z "$MYSQL_ROOT_PASSWORD" ]; then
     MYSQL_ROOT_PASSWORD="$( head /dev/urandom | tr -dc A-Za-z0-9 | head -c32 )"
