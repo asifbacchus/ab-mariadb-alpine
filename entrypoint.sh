@@ -19,7 +19,7 @@ testInteger () {
 sqlCmd='/tmp/cmd.sql'
 
 # convert env variables to uppercase for proper string comparison
-SKIP_NAME_RESOLVE=$(convertCase "$SKIP_NAME_RESOLVE")
+MYSQL_SKIP_NAME_RESOLVE=$(convertCase "$MYSQL_SKIP_NAME_RESOLVE")
 
 # verify environment variables have valid values
 if [ "$(testInteger $MYSQL_UID)" -gt 0 ]; then
@@ -34,6 +34,11 @@ else
     printf "'%s' is not a valid value for MYSQL_GID\n" "$MYSQL_UID"
     exit 1
 fi
+if [ "$MYSQL_SKIP_NAME_RESOLVE" != "TRUE" ] && [ "$MYSQL_SKIP_NAME_RESOLVE" != "FALSE" ]; then
+    printf "MYSQL_SKIP_NAME_RESOLVE must be either 'TRUE' or 'FALSE'\n"
+    exit 1
+fi
+
 # generate root password if not specified
 if [ -z "$MYSQL_ROOT_PASSWORD" ]; then
     MYSQL_ROOT_PASSWORD="$( head /dev/urandom | tr -dc A-Za-z0-9 | head -c32 )"
@@ -44,6 +49,11 @@ fi
 sed -i "s/mysql:x:100:101/mysql:x:${MYSQL_UID}:${MYSQL_GID}/" /etc/passwd
 sed -i "s/mysql:x:101/mysql:x:${MYSQL_GID}/" /etc/group
 chown -R mysql:mysql /var/lib/mysql
+
+# skip DNS reverse name resolution if option is set (default)
+if [ "$MYSQL_SKIP_NAME_RESOLVE" = 'TRUE' ]; then
+    sed -i '/^[mysqld]$/a skip-name-resolve' /etc/my.cnf.d/mariadb-server.cnf
+fi
 
 # execute pre-init scripts: /docker-entrypoint-preinit.d/*.sh
 for f in /docker-entrypoint-preinit.d/*.sh; do
