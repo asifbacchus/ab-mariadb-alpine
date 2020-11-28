@@ -134,7 +134,7 @@ Please note this is an *Alpine Linux* container so it uses the ASH shell. This i
 The container logs everything to the console, so the best way to check logs is via the `docker logs` command:
 
 ```bash
-# get default lookback period of logs
+# get default look-back period of logs
 docker logs container_name
 
 # get last 50 lines (n can be whatever you like)
@@ -337,6 +337,7 @@ docker exec -it container_name /bin/sh -c 'exec mysql -uroot -p"SuPeR$ecurEP@$$w
 ## Source
 
 The source for this container build (Dockerfile, entrypoint.sh) are available on my [private git repo](https://git.asifbacchus.app/ab-docker/mariadb-alpine) or on [GitHub](https://github.com/asifbacchus/mariadb-alpine). Note that the newest versions will be on my repo and GitHub will be updated at most a few days later. Also, I'd prefer issues be filed on my repo, but I understand if GitHub is easier/more familiar for you.
+
 ## Final Thoughts
 
 I hope this container is useful to you and helps you run a database where memory may be at a premium. I do my best to make sure everything runs properly and as much like the official container as possible. If you find any bugs, implementation issues or have any suggestions, please file an issue and let me know! I am *NOT* affiliated with MariaDB in any way and this container is strictly my implementation of their software. Please **do not** bother them with any issues you have with this container, let me know instead! Happy dockerizing :-)
