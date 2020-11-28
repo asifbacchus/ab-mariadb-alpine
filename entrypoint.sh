@@ -36,7 +36,7 @@ fi
 if [ "$(isInt "$MYSQL_GID")" -ge 0 ]; then
     printf "Setting mysql GID to %s\n" "$MYSQL_GID"
 else
-    printf "'%s' is not a valid value for MYSQL_GID\n" "$MYSQL_UID"
+    printf "'%s' is not a valid value for MYSQL_GID\n" "$MYSQL_GID"
     exit 1
 fi
 if [ "$MYSQL_SKIP_NAME_RESOLVE" != "TRUE" ] && [ "$MYSQL_SKIP_NAME_RESOLVE" != "FALSE" ]; then
