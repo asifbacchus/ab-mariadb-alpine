@@ -113,7 +113,7 @@ for f in /docker-entrypoint-postinit.d/*.sh; do
 done
 
 # execute commands passed to this container
-printf "\nInitialization complete... Container ready...\n"
+printf "\nInitialization complete...\n"
 printf "(sql root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
 exec "$@"
 
