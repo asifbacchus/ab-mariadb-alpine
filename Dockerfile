@@ -15,7 +15,7 @@ LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/mariadb-alpi
 LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/mariadb-alpine.git"
 
 # install mariadb and turn on TCP connection in default config
-RUN apk --no-cache add \
+RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
     tzdata \
     mariadb \
     mariadb-client \
@@ -55,5 +55,5 @@ CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 # add build date and version labels
 ARG BUILD_DATE
 LABEL org.label-schema.build-date=${BUILD_DATE}
-LABEL org.label-schema.vendor="mariaDB (10.5.6-r0)"
+LABEL org.label-schema.vendor="mariaDB (10.5.8-r0)"
 LABEL org.label-schema.version="1.0"
