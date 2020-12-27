@@ -10,9 +10,9 @@ LABEL org.label-schema.cmd="docker run -d --name db -v volume:/var/lib/mysql [-v
 LABEL org.label-schema.description="mariadb running on Alpine Linux."
 LABEL org.label-schema.name="ab-mariadb-alpine"
 LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.url="https://git.asifbacchus.app/ab-docker/mariadb-alpine"
-LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/mariadb-alpine/wiki"
-LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/mariadb-alpine.git"
+LABEL org.label-schema.url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine"
+LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine/wiki"
+LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine.git"
 
 # install mariadb and turn on TCP connection in default config
 RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
