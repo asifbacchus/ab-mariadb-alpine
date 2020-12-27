@@ -54,6 +54,7 @@ fi
 sed -i "s/mysql:x:100:101/mysql:x:${MYSQL_UID}:${MYSQL_GID}/" /etc/passwd
 sed -i "s/mysql:x:101/mysql:x:${MYSQL_GID}/" /etc/group
 chown -R mysql:mysql /var/lib/mysql
+chown -R mysql:mysql /docker-entrypoint-*
 
 # skip DNS reverse name resolution if option is set (default)
 if [ "$MYSQL_SKIP_NAME_RESOLVE" = 'TRUE' ]; then

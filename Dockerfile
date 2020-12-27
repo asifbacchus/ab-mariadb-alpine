@@ -45,8 +45,7 @@ ENV MYSQL_PASSWORD=''
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN mkdir -p /docker-entrypoint-preinit.d \
     && mkdir -p /docker-entrypoint-initdb.d \
-    && mkdir -p /docker-entrypoint-postinit.d \
-    && chown -R mysql:mysql /docker-entrypoint-*
+    && mkdir -p /docker-entrypoint-postinit.d
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
