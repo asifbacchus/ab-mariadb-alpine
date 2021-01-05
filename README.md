@@ -1,6 +1,9 @@
 # MariaDB on Alpine Linux (dockerized)
 
-Fully functional dockerized installation of MariaDB server and client running on Alpine Linux. This container is roughly half the size of the official MariaDB container which runs on Ubuntu but still aims to mimic all its features while adding a few extra ;-)
+Fully functional dockerized installation of MariaDB server and client running on Alpine Linux. This container is roughly
+half the size of the official MariaDB container which runs on Ubuntu but still aims to mimic all its features while
+adding a few extra ;-) Note that this container is built against the Alpine EDGE repository for newer versions of
+mariaDB.
 
 - [Quick Start](#quick-start)
   - [Pull the image](#pull-the-image)
@@ -37,11 +40,12 @@ Fully functional dockerized installation of MariaDB server and client running on
 
 ### Pull the image
 
-The latest images are on my private Docker Repo but I also try to keep the ones on Dockerhub updated within a few days. As such, you have two choices:
+The latest images are on my private docker registry but, I also try to keep the ones on Dockerhub updated within a few
+days. If you need signed containers, you will have to use my private registry. As such, you have two choices:
 
 ```bash
 # my private repo
-docker pull docker.asifbacchus.app/mariadb/ab-mariadb-alpine:latest
+docker pull asifbacchus/ab-mariadb-alpine:latest
 ```
 
 or
@@ -51,7 +55,8 @@ or
 docker pull asifbacchus/ab-mariadb-alpine:latest
 ```
 
-All the examples in this document will refer to my repo, but you can use Dockerhub if you prefer.
+The examples in this document will refer to dockerhub, but know that anywhere you
+see `asifbacchus/ab-mariadb-alpine:tag` you can use `asifbacchus/ab-mariadb-alpine:tag` to use my registry instead.
 
 ### Run the image
 
@@ -64,7 +69,7 @@ docker run -d \
     -e MYSQL_DATABASE='CompanyX' \
     -e MYSQL_USER='JaneDoe' \
     -e MYSQL_PASSWORD='JanesPa$$w0rd' \
-    docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+    asifbacchus/ab-mariadb-alpine
 ```
 
 Let's take a quick overview of the options used above:
@@ -74,7 +79,7 @@ Let's take a quick overview of the options used above:
 Assuming an existing database does not exist in the container's data directory already, it will create an empty database for you. The name of this database is controlled by the environment variable `MYSQL_DATABASE`. This defaults to 'myData'. If you would like to create a database called 'CompanyX', for example, you would set the environment variable as follows:
 
 ```bash
-docker run -d -e MYSQL_DATABASE='CompanyX' docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -e MYSQL_DATABASE='CompanyX' asifbacchus/ab-mariadb-alpine
 ```
 
 #### Root password
@@ -84,7 +89,7 @@ If you do not set a root password for mySQL, the container will generate one for
 In normal usage, you will want to set the root password instead of having it generated for you. This is accomplished by setting the environment variable `MYSQL_ROOT_PASSWORD`. The command would look something like:
 
 ```bash
-docker run -d -e MYSQL_ROOT_PASSWORD='SuPeR$ecurEP@$$w0rd' docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -e MYSQL_ROOT_PASSWORD='SuPeR$ecurEP@$$w0rd' asifbacchus/ab-mariadb-alpine
 ```
 
 #### User password
@@ -92,7 +97,7 @@ docker run -d -e MYSQL_ROOT_PASSWORD='SuPeR$ecurEP@$$w0rd' docker.asifbacchus.ap
 If you would like a user account created for you with FULL privileges to the database created by the container, you must set two environment variables: `MYSQL_USER` and `MYSQL_PASSWORD`. You can do that as follows:
 
 ```bash
-docker run -d -e MYSQL_USER='JaneDoe' -e MYSQL_PASSWORD='JanesPa$$w0rd' docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -e MYSQL_USER='JaneDoe' -e MYSQL_PASSWORD='JanesPa$$w0rd' asifbacchus/ab-mariadb-alpine
 ```
 
 ## Connecting as a client
@@ -114,7 +119,7 @@ This will log you into the container using the root account and connect you to M
 You can launch another instance of the container and use that as a client to connect to your server container or any other remote MariaDB/mySQL instance. In this case, we don't want to pass any environment variables, but we want to pass a separate CMD parameter as follows:
 
 ```bash
-docker run -it --rm docker.asifbacchus.app/mariadb/ab-mariadb-alpine mysql -hmysql.host.tld -uusername -ppassword
+docker run -it --rm asifbacchus/ab-mariadb-alpine mysql -hmysql.host.tld -uusername -ppassword
 ```
 
 **N.B.* I used the `--rm` Docker parameter to automatically remove the container on exit. This is optional.
@@ -194,10 +199,10 @@ By default, the container will create a volume to store your mySQL database so y
 
 ```bash
 # create a volume or use an existing named-volume
-docker run -d -v mydatabase:/var/lib/mysql docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -v mydatabase:/var/lib/mysql asifbacchus/ab-mariadb-alpine
 
 # use a bind-mount location
-docker run -d -v /my/local/dir:/var/lib/mysql docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -v /my/local/dir:/var/lib/mysql asifbacchus/ab-mariadb-alpine
 ```
 
 ## Data instantiation/import
@@ -207,7 +212,7 @@ docker run -d -v /my/local/dir:/var/lib/mysql docker.asifbacchus.app/mariadb/ab-
 The entrypoint script of the container simply checks to see if the */var/lib/mysql* directory is empty and, if so, creates a new database for you. Thus, if you want to import an existing database, you simply have to mount a valid *mysql* subdirectory:
 
 ```bash
-docker run -d -v /existing/mysql:/var/lib/mysql docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -v /existing/mysql:/var/lib/mysql asifbacchus/ab-mariadb-alpine
 ```
 
 ### Instantiation
@@ -215,13 +220,13 @@ docker run -d -v /existing/mysql:/var/lib/mysql docker.asifbacchus.app/mariadb/a
 If you want to 'instantiate' your newly created database (add tables, some default data, set privileges, etc.) then you can import SQL files with commands preloaded. Any *.sql* or *.sql.gz* files mounted in the container's */docker-entrypoint-initdb.d* folder will be imported after the new database is created.
 
 ```bash
-docker run -d -v /sql/import/scripts:/docker-entrypoint-initdb.d docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+docker run -d -v /sql/import/scripts:/docker-entrypoint-initdb.d asifbacchus/ab-mariadb-alpine
 ```
 
 You should review the logs when doing this to see if MariaDB throws any errors due to syntax errors or other mistakes in your SQL files. An easy way to do this is:
 
 ```bash
-docker run -d --name db -v /sql/import/scripts:/docker-entrypoint-initdb.d docker.asifbacchus.app/mariadb/ab-mariadb-alpine && docker logs -f db
+docker run -d --name db -v /sql/import/scripts:/docker-entrypoint-initdb.d asifbacchus/ab-mariadb-alpine && docker logs -f db
 ```
 
 You can, of course, name your container anything you like. Just change *'db'* in both places to whatever you choose.
@@ -238,7 +243,7 @@ To run scripts after MariaDB is initialized (i.e. after a database is created an
 docker run -d \
     -v /my/pre-init/scripts:/docker-entrypoint-preinit.d \
     -v /my/post-init/scripts:/docker-entrypoint-postinit.d \
-    docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+    asifbacchus/ab-mariadb-alpine
 ```
 
 ### Entrypoint Task Order
@@ -267,7 +272,7 @@ For reference, the sequence of events in the entrypoint script is:
 You can pass MariaDB command-line parameters to your container just as your would with a regular *mysqld* instance. For example:
 
 ```bash
-docker run -d docker.asifbacchus.app/mariadb/ab-mariadb-alpine --innodb-ft-min-token-size=2
+docker run -d asifbacchus/ab-mariadb-alpine --innodb-ft-min-token-size=2
 ```
 
 The container will concatenate any parameters your supply with the default ones of *--console --user=mysql*. Note that command-line parameters override environment variable parameters supplied to the container.
@@ -280,12 +285,12 @@ If you would like to use a completely custom MariaDB configuration you will need
 # custom my.cnf
 docker run -d \
     -v /mysql/configuration/my.cnf:/etc/my.cnf \
-    docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+    asifbacchus/ab-mariadb-alpine
 
 # custom server-related files
 docker run -d \
     -v /mysql/server-config:/etc/my.cnf.d \
-    docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+    asifbacchus/ab-mariadb-alpine
 
 # complex configuration using custom my.cnf
 # this completely depends on how you specify things in my.cnf
@@ -293,7 +298,7 @@ docker run -d \
     -v /mysql/config/my.cnf:/etc/my.cnf \
     -v /mysql/other-config:/etc/mysql/some-directory \
     -v /mysql/more-configs:/etc/mysql/cnf/another-dir \
-    docker.asifbacchus.app/mariadb/ab-mariadb-alpine
+    asifbacchus/ab-mariadb-alpine
 ```
 
 You should be aware that the container passes *'--console --user=mysql'* command-line parameters to *mysqld* by default and that will override parameters specified in *my.cnf* or any other configuration file. If you need to override these defaults, you will have to pass the *mysqld* command manually:
@@ -301,7 +306,7 @@ You should be aware that the container passes *'--console --user=mysql'* command
 ```bash
 docker run -d \
     -v /mysql/configuration/my.cnf:/etc/my.cnf \
-    docker.asifbacchus.app/mariadb/ab-mariadb-alpine \
+    asifbacchus/ab-mariadb-alpine \
     mysqld --user=anotheruser
 ```
 
