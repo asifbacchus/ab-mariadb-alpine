@@ -11,7 +11,7 @@ LABEL org.label-schema.description="mariadb running on Alpine Linux."
 LABEL org.label-schema.name="ab-mariadb-alpine"
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine"
-LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine/wiki"
+LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine/src/branch/master/README.md"
 LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine.git"
 
 # install mariadb and turn on TCP connection in default config
@@ -54,5 +54,5 @@ CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 # add build date and version labels
 ARG BUILD_DATE
 LABEL org.label-schema.build-date=${BUILD_DATE}
-LABEL org.label-schema.vendor="mariaDB (10.5.8-r0)"
+LABEL org.label-schema.vendor="mariaDB (10.4.15-r0)"
 LABEL org.label-schema.version="1.0"
