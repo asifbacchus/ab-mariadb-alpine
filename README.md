@@ -56,7 +56,8 @@ docker pull asifbacchus/ab-mariadb-alpine:latest
 ```
 
 The examples in this document will refer to dockerhub, but know that anywhere you
-see `asifbacchus/ab-mariadb-alpine:tag` you can use `asifbacchus/ab-mariadb-alpine:tag` to use my registry instead.
+see `asifbacchus/ab-mariadb-alpine:tag` you can use `docker.asifbacchus.app/mariadb/ab-mariadb-alpine` to use my
+registry instead.
 
 ### Run the image
 
