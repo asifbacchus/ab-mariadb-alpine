@@ -54,5 +54,5 @@ CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 # add build date and version labels
 ARG BUILD_DATE
 LABEL org.label-schema.build-date=${BUILD_DATE}
-LABEL org.label-schema.vendor="mariaDB (10.4.15-r0)"
+LABEL org.label-schema.vendor="mariaDB (10.5.8-r0)"
 LABEL org.label-schema.version="1.0"
