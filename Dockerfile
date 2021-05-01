@@ -2,7 +2,7 @@
 ### mariadb running on Alpine Linux
 #
 
-FROM alpine:3.12
+FROM alpine:3.13
 
 # standardized labels
 LABEL maintainer="Asif Bacchus <asif@bacchus.cloud>"
@@ -54,5 +54,5 @@ CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 # add build date and version labels
 ARG BUILD_DATE
 LABEL org.label-schema.build-date=${BUILD_DATE}
-LABEL org.label-schema.vendor="mariaDB (10.5.8-r0)"
+LABEL org.label-schema.vendor="mariaDB (10.5.9-r0)"
 LABEL org.label-schema.version="1.0"
