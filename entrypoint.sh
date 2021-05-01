@@ -127,7 +127,7 @@ for f in /docker-entrypoint-initdb.d/*; do
         *.sql)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"); then
+                if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 "$MYSQL_DATABASE" < "$f"); then
                     exit 3
                 fi
                 printf "\n"
@@ -136,7 +136,7 @@ for f in /docker-entrypoint-initdb.d/*; do
         *.sql.gz)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                if (! gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0); then
+                if (! gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 "$MYSQL_DATABASE"); then
                     exit 3
                 fi
                 printf "\n"
