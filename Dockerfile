@@ -6,10 +6,10 @@ FROM alpine:3.13
 
 # standardized labels
 LABEL maintainer="Asif Bacchus <asif@bacchus.cloud>"
-LABEL org.label-schema.cmd="docker run -d --name db -v volume:/var/lib/mysql [-v /pre/exec/scripts:/docker-entrypoint-preinit.d] [-v /sql/scripts:/docker-entrypoint-initdb.d] [-v /post/exec/scripts:/docker-entrypoint-postinit.d] [-e TZ=Etc/UTC -e MYSQL_UID=8100 -e MYSQL_GID=8100 -e MYSQL_ROOT_PASSWORD=... -e MYSQL_DATABASE='myData' -e MYSQL_CHARSET='utf8mb4' -e MYSQL_COLLATION='utf8mb4_general_ci' -e MYSQL_USER=... -e MYSQL_PASSWORD=...] docker.asifbacchus.app/mariadb/ab-mariadb-alpine:latest"
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.docker.cmd="docker run -d --name db -v volume:/var/lib/mysql [-v /pre/exec/scripts:/docker-entrypoint-preinit.d] [-v /sql/scripts:/docker-entrypoint-initdb.d] [-v /post/exec/scripts:/docker-entrypoint-postinit.d] [-e param1 -e param2...] docker.asifbacchus.app/mariadb/ab-mariadb-alpine:latest"
 LABEL org.label-schema.description="mariadb running on Alpine Linux."
 LABEL org.label-schema.name="ab-mariadb-alpine"
-LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine"
 LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine/src/branch/master/README.md"
 LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine.git"
@@ -51,8 +51,9 @@ RUN mkdir -p /docker-entrypoint-preinit.d \
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 
-# add build date and version labels
+# add parameters, version and build date labels
+LABEL org.label-schema.docker.params="TZ=Etc/UTC, MYSQL_UID=8100, MYSQL_GID=8100, MYSQL_ROOT_PASSWORD=..., MYSQL_DATABASE='myData', MYSQL_CHARSET='utf8mb4', MYSQL_COLLATION='utf8mb4_general_ci', MYSQL_USER=..., MYSQL_PASSWORD=..."
+LABEL org.label-schema.vendor="mariaDB (10.5.9-r0)"
+LABEL org.label-schema.version="1.1"
 ARG BUILD_DATE
 LABEL org.label-schema.build-date=${BUILD_DATE}
-LABEL org.label-schema.vendor="mariaDB (10.5.9-r0)"
-LABEL org.label-schema.version="1.0"
