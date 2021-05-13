@@ -19,6 +19,7 @@ isInt () {
 
 # instantiate variables
 sqlCmd='/tmp/cmd.sql'
+showRootPassword=0
 
 # convert env variables to uppercase for proper string comparison
 MYSQL_SKIP_NAME_RESOLVE=$(convertCase "$MYSQL_SKIP_NAME_RESOLVE")
@@ -48,6 +49,7 @@ fi
 if [ -z "$MYSQL_ROOT_PASSWORD" ]; then
     MYSQL_ROOT_PASSWORD="$( head /dev/urandom | tr -dc A-Za-z0-9 | head -c32 )"
     export MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    showRootPassword=1
 fi
 
 # change mysql UID & GID
@@ -159,7 +161,9 @@ done
 
 # note initialization complete and display root password
 printf "\nInitialization complete...\n"
-printf "(mySQL root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
+if [ "$showRootPassword" -eq 1 ]; then
+    printf "(mySQL root password: %s)\n\n" "$MYSQL_ROOT_PASSWORD"
+fi
 
 # process CMD sent to this container
 case "$1" in
