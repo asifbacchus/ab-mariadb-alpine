@@ -16,11 +16,12 @@ LABEL org.opencontainer.image.url="https://git.asifbacchus.dev/ab-docker/ab-mari
 LABEL org.opencontainer.image.vendor="Asif Bacchus <asif@asifbacchus.dev>"
 
 # install mariadb and turn on TCP connection in default config
-RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
-    tzdata \
-    mariadb \
-    mariadb-client \
-    mariadb-server-utils \
+RUN apk --update --no-cache upgrade \
+    && apk --update --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
+        tzdata \
+        mariadb \
+        mariadb-client \
+        mariadb-server-utils \
     && rm -f /var/cache/apk/* \
     && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
