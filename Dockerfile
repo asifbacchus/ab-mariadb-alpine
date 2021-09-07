@@ -30,6 +30,14 @@ EXPOSE 3306
 # create volume if user forgets
 VOLUME ["/var/lib/mysql"]
 
+# basic healthcheck (service only)
+HEALTHCHECK \
+    --interval=30s \
+    --timeout=10s \
+    --start-period=30s \
+    --retries=3 \
+    CMD mysqladmin ping --silent
+
 # set environment variables
 ENV TZ=Etc/UTC
 ENV MYSQL_UID=8100
