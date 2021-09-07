@@ -2,7 +2,7 @@
 ### mariadb running on Alpine Linux
 #
 
-FROM alpine:3.13
+FROM alpine:3.14
 
 # standardized labels
 MAINTAINER Asif Bacchus <asif@asifbacchus.dev>
