@@ -5,59 +5,90 @@ half the size of the official MariaDB container which runs on Ubuntu but still a
 adding a few extra ;-) Note that this container is built against the Alpine EDGE repository for newer versions of
 mariaDB.
 
+<!-- toc -->
+
 - [Quick Start](#quick-start)
-  - [Pull the image](#pull-the-image)
-  - [Run the image](#run-the-image)
-  - [Create a database](#create-a-database)
-    - [Root password](#root-password)
-    - [User password](#user-password)
+  * [Pull the image](#pull-the-image)
+    + [Signed images](#signed-images)
+  * [Run the image](#run-the-image)
+  * [Create a database](#create-a-database)
+    + [Root password](#root-password)
+    + [User password](#user-password)
 - [Connecting as a client](#connecting-as-a-client)
-  - [Direct-to-Container](#direct-to-container)
-  - [Separate Container](#separate-container)
+  * [Direct-to-Container](#direct-to-container)
+  * [Separate Container](#separate-container)
 - [Shell Access](#shell-access)
 - [Checking Logs](#checking-logs)
 - [Environment Variables](#environment-variables)
-  - [System-related](#system-related)
-  - [MariaDB configuration](#mariadb-configuration)
-  - [Database configuration](#database-configuration)
+  * [System-related](#system-related)
+  * [MariaDB configuration](#mariadb-configuration)
+  * [Database configuration](#database-configuration)
 - [Root Account](#root-account)
-  - [Integrated-account](#integrated-account)
-  - [Root-at-any-host](#root-at-any-host)
+  * [Integrated-account](#integrated-account)
+  * [Root-at-any-host](#root-at-any-host)
 - [Data Persistence](#data-persistence)
 - [Data instantiation/import](#data-instantiationimport)
-  - [Existing DB (mysql directory)](#existing-db-mysql-directory)
-  - [Instantiation](#instantiation)
+  * [Existing DB (mysql directory)](#existing-db-mysql-directory)
+  * [Instantiation](#instantiation)
 - [Custom Scripts](#custom-scripts)
-  - [Entrypoint Task Order](#entrypoint-task-order)
+  * [Entrypoint Task Order](#entrypoint-task-order)
 - [Custom Configuration](#custom-configuration)
-  - [Command-line parameters](#command-line-parameters)
-  - [Configuration file(s)](#configuration-files)
+  * [Command-line parameters](#command-line-parameters)
+  * [Configuration file(s)](#configuration-files)
 - [Database dumps](#database-dumps)
+- [Healthcheck](#healthcheck)
 - [Source](#source)
 - [Final Thoughts](#final-thoughts)
+
+<!-- tocstop -->
 
 ## Quick Start
 
 ### Pull the image
 
-The latest images are on my private docker registry but, I also try to keep the ones on Dockerhub updated within a few
-days. If you need signed containers, you will have to use my private registry. As such, you have two choices:
+The latest images are on my private docker registry. I also try to keep the ones on Dockerhub updated within a few
+days.
 
 ```bash
-# my private repo
-docker pull asifbacchus/ab-mariadb-alpine:latest
-```
+# pull from my private repo
+docker pull docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:latest
 
-or
-
-```bash
-# dockerhub
+# pull from dockerhub
 docker pull asifbacchus/ab-mariadb-alpine:latest
 ```
 
 The examples in this document will refer to dockerhub, but know that anywhere you
-see `asifbacchus/ab-mariadb-alpine:tag` you can use `docker.asifbacchus.app/mariadb/ab-mariadb-alpine` to use my
+see `asifbacchus/ab-mariadb-alpine:tag` you can use `docker.asifbacchus.app/mariadb/ab-mariadb-alpine:tag` to use my
 registry instead.
+
+#### Signed images
+
+I have abandoned using Docker's signing mechanisms in favour of [CodeNotary](https://codenotary.io). Not only are they free, they offer several big advantages including avoiding Docker's weird and over-complicated key management system. The only drawback is that verifying images requires you downloading their [client software](https://github.com/codenotary/vcn/releases) which is free to use and does not require an account for verifying images or anything else. On Linux, you can simply rename the downloaded file `vcn` and place it somewhere in your path like `/usr/local/bin`, make it executable and then you can verify this image. Here's an example, obviously you need to modify it for your environment:
+
+```sh
+# run commands as root
+sudo -s
+
+# download vcn to proper location
+wget https://github.com/vchain-us/vcn/releases/download/v0.9.9/vcn-v0.9.9-linux-amd64 -O /usr/local/bin/vcn
+chmod +x /usr/local/bin/vcn
+
+# make sure it works
+vcn --version
+
+# verify container image
+vcn authenticate docker://asifbacchus/ab-mariadb-alpine:latest
+```
+
+If you want to confirm the image is authentic before each run, you can do:
+
+```sh
+vcn verify docker://asifbacchus/ab-mariadb-alpine:latest && docker run ... docker://asifbacchus/ab-mariadb-alpine:latest
+```
+
+Since you are making verification a prerequisite to running the docker command (i.e. using `&&`), you can be sure that you are working with a verified and signed image.
+
+You can get more information on installing the client software for different platforms [here](https://docs.codenotary.io/guide/quickhelp.html#installing-the-codenotary-tools).
 
 ### Run the image
 
@@ -339,6 +370,12 @@ docker exec -it container_name /bin/sh -c 'exec mysql' < /local/path/mySQLdumps/
 # restore using username and password (e.g. root)
 docker exec -it container_name /bin/sh -c 'exec mysql -uroot -p"SuPeR$ecurEP@$$w0rd"' < /local/path/mySQLdumps/filename.sql
 ```
+
+## Healthcheck
+
+Starting with internal version 2.0-10.6.4-r0, I've added a very basic healthcheck to the container. It simply checks that the mysqld daemon is running in the container and accepting connections. It **does NOT** check anything to do with the actual database. As such, you may want to override this with a more specific healthcheck for your particular use-case. If you just need to know MariaDB is actually running though, this healthcheck will work just fine.
+
+If anyone has suggestions for a better healthcheck, PLEASE let me know!
 
 ## Source
 
