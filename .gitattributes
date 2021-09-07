@@ -20,7 +20,7 @@
 *.PDF      diff=astextplain
 *.rtf      diff=astextplain
 *.RTF      diff=astextplain
-*.md       text
+*.md       text diff=markdown
 *.tex      text diff=tex
 *.adoc     text
 *.textile  text
@@ -30,6 +30,7 @@
 *.tsv      text
 *.txt      text
 *.sql      text
+*.ps1      text eol=crlf
 
 # Graphics
 *.png      binary
@@ -53,7 +54,23 @@
 # These are explicitly windows files and should use crlf
 *.bat      text eol=crlf
 *.cmd      text eol=crlf
-*.ps1      text eol=crlf
+
+# web frontend stack -- force LF so SRI hashes are always correct
+*.html     text eol=lf
+*.htm      text eol=lf
+*.css      text eol=lf
+*.min.css  text eol=lf
+*.js       text eol=lf
+*.min.js   text eol=lf
+*.php      text eol=lf
+
+# Visual Studio projects (Rider also)
+*.cs     diff=csharp
+*.sln    merge=union
+*.csproj merge=union
+*.vbproj merge=union
+*.fsproj merge=union
+*.dbproj merge=union
 
 # Serialisation
 *.json     text
@@ -76,7 +93,8 @@
 # Exclude files from exporting
 #
 
-.gitattributes export-ignore
-.gitignore     export-ignore
-.gitkeep       export-ignore
-.vscode        export-ignore
+.gitattributes  export-ignore
+.gitignore      export-ignore
+.gitkeep        export-ignore
+.idea           export-ignore
+.vscode         export-ignore
