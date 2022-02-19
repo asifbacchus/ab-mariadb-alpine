@@ -2,7 +2,13 @@
 ### mariadb running on Alpine Linux
 #
 
-FROM alpine:3.13
+# version arguments
+ARG ALPINE_VERSION="3.14"
+ARG MARIADB_VERSION="10.5.13-r0"
+
+FROM alpine:${ALPINE_VERSION}
+ARG ALPINE_VERSION
+ARG MARIADB_VERSION
 
 # standardized labels
 MAINTAINER Asif Bacchus <asif@asifbacchus.dev>
