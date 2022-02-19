@@ -12,12 +12,12 @@ ARG MARIADB_VERSION
 
 # standardized labels
 MAINTAINER Asif Bacchus <asif@asifbacchus.dev>
-LABEL dev.asifbacchus.docker.internalName="ab-mariadb"
+LABEL dev.asifbacchus.docker.internalName="ab-mariadb-alpine"
 LABEL org.opencontainer.image.authors="Asif Bacchus <asif@asifbacchus.dev>"
 LABEL org.opencontainer.image.description="Mariadb on Alpine Linux."
 LABEL org.opencontainer.image.documentation="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine/raw/branch/main/README.md"
 LABEL org.opencontainer.image.source="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine.git"
-LABEL org.opencontainer.image.title="ab-mariadb"
+LABEL org.opencontainer.image.title="ab-mariadb-alpine"
 LABEL org.opencontainer.image.url="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine"
 LABEL org.opencontainer.image.vendor="Asif Bacchus <asif@asifbacchus.dev>"
 
