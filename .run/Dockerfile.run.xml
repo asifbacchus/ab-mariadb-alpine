@@ -2,7 +2,7 @@
   <configuration default="false" name="Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker LOCAL">
     <deployment type="dockerfile">
       <settings>
-        <option name="imageTag" value="docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:10.6.4" />
+        <option name="imageTag" value="docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:10.6.4-r2" />
         <option name="buildArgs">
           <list>
             <DockerEnvVarImpl>
