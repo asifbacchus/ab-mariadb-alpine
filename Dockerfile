@@ -27,7 +27,7 @@ RUN apk --no-cache --update add \
     mariadb>${MARIADB_VERSION} \
     mariadb-client>${MARIADB_VERSION} \
     mariadb-server-utils>${MARIADB_VERSION} \
-    && apk --no-cache --update --upgrade \
+    && apk --no-cache --update upgrade \
     && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
 # expose ports
