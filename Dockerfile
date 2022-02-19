@@ -5,14 +5,15 @@
 FROM alpine:3.13
 
 # standardized labels
-LABEL maintainer="Asif Bacchus <asif@bacchus.cloud>"
-LABEL org.label-schema.schema-version="1.0"
-LABEL org.label-schema.docker.cmd="docker run -d --name db -v volume:/var/lib/mysql [-v /pre/exec/scripts:/docker-entrypoint-preinit.d] [-v /sql/scripts:/docker-entrypoint-initdb.d] [-v /post/exec/scripts:/docker-entrypoint-postinit.d] [-e param1 -e param2...] docker.asifbacchus.app/mariadb/ab-mariadb-alpine:latest"
-LABEL org.label-schema.description="mariadb running on Alpine Linux."
-LABEL org.label-schema.name="ab-mariadb-alpine"
-LABEL org.label-schema.url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine"
-LABEL org.label-schema.usage="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine/src/branch/master/README.md"
-LABEL org.label-schema.vcs-url="https://git.asifbacchus.app/ab-docker/ab-mariadb-alpine.git"
+MAINTAINER Asif Bacchus <asif@asifbacchus.dev>
+LABEL dev.asifbacchus.docker.internalName="ab-mariadb"
+LABEL org.opencontainer.image.authors="Asif Bacchus <asif@asifbacchus.dev>"
+LABEL org.opencontainer.image.description="Mariadb on Alpine Linux."
+LABEL org.opencontainer.image.documentation="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine/raw/branch/main/README.md"
+LABEL org.opencontainer.image.source="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine.git"
+LABEL org.opencontainer.image.title="ab-mariadb"
+LABEL org.opencontainer.image.url="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine"
+LABEL org.opencontainer.image.vendor="Asif Bacchus <asif@asifbacchus.dev>"
 
 # install mariadb and turn on TCP connection in default config
 RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
@@ -51,9 +52,13 @@ RUN mkdir -p /docker-entrypoint-preinit.d \
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 
-# add parameters, version and build date labels
-LABEL org.label-schema.docker.params="TZ=Etc/UTC, MYSQL_UID=8100, MYSQL_GID=8100, MYSQL_ROOT_PASSWORD=..., MYSQL_DATABASE='myData', MYSQL_CHARSET='utf8mb4', MYSQL_COLLATION='utf8mb4_general_ci', MYSQL_USER=..., MYSQL_PASSWORD=..."
-LABEL org.label-schema.vendor="mariaDB (10.5.9-r0)"
-LABEL org.label-schema.version="1.1"
+# set build timestamp and version labels
+ARG INTERNAL_VERSION
+ARG GIT_COMMIT
 ARG BUILD_DATE
-LABEL org.label-schema.build-date=${BUILD_DATE}
+LABEL dev.asifbacchus.docker.internalVersion=${INTERNAL_VERSION}
+LABEL org.opencontainers.image.version="${INTERNAL_VERSION}-${MARIADB_VERSION}"
+LABEL org.opencontainers.image.revision=${GIT_COMMIT}
+LABEL org.opencontainers.image.created=${BUILD_DATE}
+
+#EOF
