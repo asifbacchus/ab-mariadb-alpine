@@ -22,12 +22,12 @@ LABEL org.opencontainer.image.url="https://git.asifbacchus.dev/ab-docker/ab-mari
 LABEL org.opencontainer.image.vendor="Asif Bacchus <asif@asifbacchus.dev>"
 
 # install mariadb and turn on TCP connection in default config
-RUN apk --no-cache add \
+RUN apk --no-cache --update add \
     tzdata \
     mariadb>${MARIADB_VERSION} \
     mariadb-client>${MARIADB_VERSION} \
     mariadb-server-utils>${MARIADB_VERSION} \
-    && rm -f /var/cache/apk/* \
+    && apk --no-cache --update --upgrade \
     && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
 # expose ports
