@@ -1,5 +1,5 @@
 #
-### mariadb running on Alpine Linux
+# mariadb running on Alpine Linux
 #
 
 # version arguments
@@ -22,11 +22,11 @@ LABEL org.opencontainer.image.url="https://git.asifbacchus.dev/ab-docker/ab-mari
 LABEL org.opencontainer.image.vendor="Asif Bacchus <asif@asifbacchus.dev>"
 
 # install mariadb and turn on TCP connection in default config
-RUN apk --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
+RUN apk --no-cache add \
     tzdata \
-    mariadb \
-    mariadb-client \
-    mariadb-server-utils \
+    mariadb>${MARIADB_VERSION} \
+    mariadb-client>${MARIADB_VERSION} \
+    mariadb-server-utils>${MARIADB_VERSION} \
     && rm -f /var/cache/apk/* \
     && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
