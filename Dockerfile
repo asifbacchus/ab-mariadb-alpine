@@ -1,14 +1,20 @@
 #
-### mariadb running on Alpine Linux
+# mariadb running on Alpine Linux
 #
 
-FROM alpine:3.14
+# build arguments
+ARG ALPINE_VERSION="3.15"
+ARG MARIADB_VERSION="10.6.4-r2"
+
+FROM alpine:${ALPINE_VERSION}
+ARG ALPINE_VERSION
+ARG MARIADB_VERSION
 
 # standardized labels
 MAINTAINER Asif Bacchus <asif@asifbacchus.dev>
 LABEL dev.asifbacchus.docker.internalName="ab-mariadb-alpine"
 LABEL org.opencontainer.image.authors="Asif Bacchus <asif@asifbacchus.dev>"
-LABEL org.opencontainer.image.description=""
+LABEL org.opencontainer.image.description="Mariadb on Alpine Linux."
 LABEL org.opencontainer.image.documentation="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine/raw/branch/main/README.md"
 LABEL org.opencontainer.image.source="https://git.asifbacchus.dev/ab-docker/ab-mariadb-alpine.git"
 LABEL org.opencontainer.image.title="ab-mariadb-alpine"
@@ -16,13 +22,12 @@ LABEL org.opencontainer.image.url="https://git.asifbacchus.dev/ab-docker/ab-mari
 LABEL org.opencontainer.image.vendor="Asif Bacchus <asif@asifbacchus.dev>"
 
 # install mariadb and turn on TCP connection in default config
-RUN apk --update --no-cache upgrade \
-    && apk --update --no-cache --repository=http://dl-cdn.alpinelinux.org/alpine/edge/main add \
+RUN apk --update --no-cache add \
         tzdata \
-        mariadb \
-        mariadb-client \
-        mariadb-server-utils \
-    && rm -f /var/cache/apk/* \
+        mariadb>${MARIADB_VERSION} \
+        mariadb-client>${MARIADB_VERSION} \
+        mariadb-server-utils>${MARIADB_VERSION} \
+    && apk --no-cache --update upgrade \
     && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
 # expose ports
@@ -55,7 +60,8 @@ ENV MYSQL_PASSWORD=''
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN mkdir -p /docker-entrypoint-preinit.d \
     && mkdir -p /docker-entrypoint-initdb.d \
-    && mkdir -p /docker-entrypoint-postinit.d
+    && mkdir -p /docker-entrypoint-postinit.d \
+    && chmod +x /usr/local/bin/entrypoint.sh
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
@@ -63,7 +69,6 @@ CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
 
 # add parameters, version and build date labels
 # set build timestamp and version labels
-ARG MARIADB_VERSION
 ARG INTERNAL_VERSION
 ARG GIT_COMMIT
 ARG BUILD_DATE
