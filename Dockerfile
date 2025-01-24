@@ -3,8 +3,8 @@
 #
 
 # build arguments
-ARG ALPINE_VERSION="3.20"
-ARG MARIADB_VERSION="10.11.8-r0"
+ARG ALPINE_VERSION="3.21"
+ARG MARIADB_VERSION="11.4.4-r1"
 
 FROM alpine:${ALPINE_VERSION}
 ARG ALPINE_VERSION
@@ -39,7 +39,7 @@ VOLUME ["/var/lib/mysql"]
 # basic healthcheck (service only)
 HEALTHCHECK \
     --interval=30s \
-    --timeout=10s \
+    --timeout=5s \
     --start-period=5s \
     --retries=3 \
     CMD mysqladmin ping --silent
