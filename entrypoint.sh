@@ -86,7 +86,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
 
     # create system tables
     printf "DB-CREATE: Setting up mySQL system tables\n"
-    if (! mysql_install_db --user=mysql --ldata=/var/lib/mysql > /dev/null); then
+    if (! mariadb-install-db --user=mysql --ldata=/var/lib/mysql > /dev/null); then
         exit 1
     fi
 
@@ -113,7 +113,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
 
     # execute statements against mariadb and cleanup
     printf "DB-CREATE: Bootstrapping mySQL database\n"
-    if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$sqlCmd"); then
+    if (! mariadbd --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$sqlCmd"); then
         exit 1
     fi
     shred -u "$sqlCmd"
@@ -129,7 +129,7 @@ for f in /docker-entrypoint-initdb.d/*; do
         *.sql)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                if (! mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"); then
+                if (! mariadbd --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"); then
                     exit 3
                 fi
                 printf "\n"
@@ -138,7 +138,7 @@ for f in /docker-entrypoint-initdb.d/*; do
         *.sql.gz)
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
-                if (! gunzip -c "$f" | mysqld --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0); then
+                if (! gunzip -c "$f" | mariadbd --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0); then
                     exit 3
                 fi
                 printf "\n"
@@ -168,8 +168,8 @@ fi
 # process CMD sent to this container
 case "$1" in
     -*)
-        # param starts with '-' --> assume mysqld parameter(s) and append to CMD
-        set -- /usr/bin/mysqld --user=mysql --console "$@"
+        # param starts with '-' --> assume mariadbd parameter(s) and append to CMD
+        set -- /usr/bin/mariadbd --user=mysql --console "$@"
         printf "\nExecuting: %s\n" "$*"
         exec "$@"
         ;;
