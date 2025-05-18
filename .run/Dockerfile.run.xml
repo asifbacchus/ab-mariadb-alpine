@@ -2,7 +2,7 @@
   <configuration default="false" name="Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker (WSL)">
     <deployment type="dockerfile">
       <settings>
-        <option name="imageTag" value="docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:11.4.4-r1" />
+        <option name="imageTag" value="docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:11.4.5-r0" />
         <option name="buildArgs">
           <list>
             <DockerEnvVarImpl>
@@ -11,19 +11,19 @@
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="MARIADB_VERSION" />
-              <option name="value" value="11.4.4-r1" />
+              <option name="value" value="11.4.5-r0" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="INTERNAL_VERSION" />
-              <option name="value" value="2.3.0" />
+              <option name="value" value="2.3.1" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="GIT_COMMIT" />
-              <option name="value" value="8a6df0d489" />
+              <option name="value" value="08c2608102" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="BUILD_DATE" />
-              <option name="value" value="2025-01-24" />
+              <option name="value" value="2025-05-18" />
             </DockerEnvVarImpl>
           </list>
         </option>
