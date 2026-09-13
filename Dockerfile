@@ -4,7 +4,7 @@
 
 # build arguments
 ARG ALPINE_VERSION="3.24"
-ARG MARIADB_VERSION="11.4.12-r0"
+ARG MARIADB_VERSION="11.8.8-r0"
 
 FROM alpine:${ALPINE_VERSION}
 ARG ALPINE_VERSION
@@ -65,7 +65,7 @@ RUN mkdir -p /docker-entrypoint-preinit.d \
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
+CMD [ "/usr/bin/mariadbd", "--user=mysql", "--console" ]
 
 # add parameters, version and build date labels
 # set build timestamp and version labels
