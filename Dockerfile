@@ -65,7 +65,7 @@ RUN mkdir -p /docker-entrypoint-preinit.d \
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-CMD [ "/usr/bin/mysqld", "--user=mysql", "--console" ]
+CMD [ "/usr/bin/mariadbd", "--user=mysql", "--console" ]
 
 # add parameters, version and build date labels
 # set build timestamp and version labels
