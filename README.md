@@ -9,7 +9,6 @@ mariaDB.
 
 - [Quick Start](#quick-start)
   * [Pull the image](#pull-the-image)
-    + [Signed images](#signed-images)
   * [Run the image](#run-the-image)
   * [Create a database](#create-a-database)
     + [Root password](#root-password)
@@ -60,35 +59,6 @@ docker pull asifbacchus/ab-mariadb-alpine:latest
 The examples in this document will refer to dockerhub, but know that anywhere you
 see `asifbacchus/ab-mariadb-alpine:tag` you can use `docker.asifbacchus.app/mariadb/ab-mariadb-alpine:tag` to use my
 registry instead.
-
-#### Signed images
-
-I have abandoned using Docker's signing mechanisms in favour of [CodeNotary](https://codenotary.io). Not only are they free, they offer several big advantages including avoiding Docker's weird and over-complicated key management system. The only drawback is that verifying images requires you downloading their [client software](https://github.com/codenotary/vcn/releases) which is free to use and does not require an account for verifying images or anything else. On Linux, you can simply rename the downloaded file `vcn` and place it somewhere in your path like `/usr/local/bin`, make it executable and then you can verify this image. Here's an example, obviously you need to modify it for your environment:
-
-```sh
-# run commands as root
-sudo -s
-
-# download vcn to proper location
-wget https://github.com/vchain-us/vcn/releases/download/v0.9.9/vcn-v0.9.9-linux-amd64 -O /usr/local/bin/vcn
-chmod +x /usr/local/bin/vcn
-
-# make sure it works
-vcn --version
-
-# verify container image
-vcn authenticate docker://asifbacchus/ab-mariadb-alpine:latest
-```
-
-If you want to confirm the image is authentic before each run, you can do:
-
-```sh
-vcn verify docker://asifbacchus/ab-mariadb-alpine:latest && docker run ... docker://asifbacchus/ab-mariadb-alpine:latest
-```
-
-Since you are making verification a prerequisite to running the docker command (i.e. using `&&`), you can be sure that you are working with a verified and signed image.
-
-You can get more information on installing the client software for different platforms [here](https://docs.codenotary.io/guide/quickhelp.html#installing-the-codenotary-tools).
 
 ### Run the image
 
