@@ -27,6 +27,7 @@ RUN apk --update --no-cache add \
         mariadb>${MARIADB_VERSION} \
         mariadb-client>${MARIADB_VERSION} \
         mariadb-server-utils>${MARIADB_VERSION} \
+        mariadb-backup>${MARIADB_VERSION} \
     && apk --no-cache --update upgrade \
     && sed -i 's/skip-networking/skip-networking=0/' /etc/my.cnf.d/mariadb-server.cnf
 
