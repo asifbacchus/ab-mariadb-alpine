@@ -110,6 +110,9 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     fi
     printf "DB-CREATE: Generating statement to drop 'test' table\n"
     printf "DROP DATABASE IF EXISTS test;\n" >> "$sqlCmd"
+    printf "DB-CREATE: Removing test table grants\n"
+    printf "REVOKE ALL PRIVILEGES ON `test`.* FROM PUBLIC;" >>"$sqlCmd"
+    printf "REVOKE ALL PRIVILEGES ON `test\_%`.* FROM PUBLIC;" >>"$sqlCmd"
     printf "FLUSH PRIVILEGES;\n" >> "$sqlCmd"
 
     # execute statements against mariadb and cleanup
