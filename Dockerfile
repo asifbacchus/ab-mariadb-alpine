@@ -58,10 +58,11 @@ ENV MYSQL_PASSWORD=''
 
 # copy scripts and make script/sql directories
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY scripts/* /usr/local/bin/
 RUN mkdir -p /docker-entrypoint-preinit.d \
     && mkdir -p /docker-entrypoint-initdb.d \
     && mkdir -p /docker-entrypoint-postinit.d \
-    && chmod +x /usr/local/bin/entrypoint.sh
+    && chmod +x /usr/local/bin/*
 
 # set entrypoint and default command
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
