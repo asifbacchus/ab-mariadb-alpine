@@ -54,7 +54,7 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
-if (! command -v mariadbd >/dev/null 2>&1); then \
+if (! command -v mariadb >/dev/null 2>&1); then \
   printf "\nMariaDB not found. Exiting.\n\n"
   exit 1
 fi
@@ -78,7 +78,7 @@ printf "GRANT ALTER on mysql.mariadb_backup_history TO \`%s\`@\`localhost\`;\n" 
 printf "FLUSH PRIVILEGES;\n" >>"$SQL_FILE"
 
 # execute the SQL commands
-if (! mariadbd <"$SQL_FILE"); then
+if (! mariadb <"$SQL_FILE"); then
   printf "\nERROR: There was an error creating/updating user '%s'.\n\n" "$BACKUP_USERNAME"
   cleanExit 2
 else
