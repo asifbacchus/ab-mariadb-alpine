@@ -14,7 +14,7 @@ cleanExit() {
 }
 
 scriptHelp() {
-  printf "\nAdd the 'mysql.backup_history_table' to a mariadb instance.\n"
+  printf "\nAdd the 'mysql.backup_history_table' to a MariaDB instance.\n"
   printf "USAGE: %s\n" "$SCRIPT_NAME"
   printf "\tThis script has no parameters.\n\n"
   exit 0
@@ -69,7 +69,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 if (! command -v mariadbd >/dev/null 2>&1); then\
-  printf "\nmariadb not found. Exiting.\n\n"
+  printf "\nMariaDB not found. Exiting.\n\n"
   exit 1
 fi
 
