@@ -71,7 +71,7 @@ if [ -z "$BACKUP_USER_PASSWORD" ]; then \
 fi
 
 # create the SQL temp file
-SQL_FILE="$(mktemp -t ${SCRIPT_NAME}_XXXXXXXX.sql)"
+SQL_FILE="$(mktemp -t ${SCRIPT_NAME}_XXXXXXXX)"
 printf "CREATE USER IF NOT EXISTS \`%s\`@\`localhost\` IDENTIFIED BY \`%s\`;\n" "$BACKUP_USERNAME" "$BACKUP_USER_PASSWORD" >>"$SQL_FILE"
 printf "GRANT RELOAD, PROCESS, LOCK TABLES, BINLOG MONITOR, REPLICATION CLIENT ON *.* TO \`%s\`@\`localhost\`;\n" "$BACKUP_USERNAME" >>"$SQL_FILE"
 printf "GRANT ALTER on mysql.mariadb_backup_history TO \`%s\`@\`localhost\`;\n" "$BACKUP_USERNAME" >>"$SQL_FILE"

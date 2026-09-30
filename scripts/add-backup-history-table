@@ -74,7 +74,7 @@ if (! command -v mariadbd >/dev/null 2>&1); then\
 fi
 
 # create the SQL temp file
-SQL_FILE="$(mktemp -t ${SCRIPT_NAME}_XXXXXXXX.sql)"
+SQL_FILE="$(mktemp -t ${SCRIPT_NAME}_XXXXXXXX)"
 
 # assemble the SQL command and run it
 printf "%s" "$SQL_BACKUP_HISTORY_TABLE" >"$SQL_FILE"
