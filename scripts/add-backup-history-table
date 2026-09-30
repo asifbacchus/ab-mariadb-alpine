@@ -24,6 +24,7 @@ scriptHelp() {
 SCRIPT_NAME="$(basename "$0")"
 SQL_BACKUP_HISTORY_TABLE=$(
   cat << 'ENDBLOCK'
+USE mysql;
 CREATE TABLE IF NOT EXISTS `mariadb_backup_history` (
   `uuid` varchar(40) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
