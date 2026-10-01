@@ -9,7 +9,7 @@ SCRIPT_NAME="$(basename "$0")"
 BACKUP_USERNAME=""
 
 cleanExit() {
-  \rm -f "$SQL_FILE" >/dev/null 2>&1
+  shred -u "$SQL_FILE" >/dev/null 2>&1
   [ -n "$1" ] && exit "$1" || exit 0
 }
 
