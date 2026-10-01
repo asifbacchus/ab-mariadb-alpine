@@ -55,6 +55,7 @@ ENV MYSQL_CHARSET='utf8mb4'
 ENV MYSQL_COLLATION='utf8mb4_general_ci'
 ENV MYSQL_USER=''
 ENV MYSQL_PASSWORD=''
+ENV BACKUP_USER='backupuser'
 ENV BACKUP_USER_PASSWORD=''
 
 # copy scripts and make script/sql directories
