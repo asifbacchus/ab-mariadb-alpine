@@ -6,7 +6,8 @@
 
 # instantiate variables
 SCRIPT_NAME="$(basename "$0")"
-BACKUP_USERNAME=""
+BUSER="$BACKUP_USER"
+BPASSWORD="$BACKUP_USER_PASSWORD"
 
 cleanExit() {
   shred -u "$SQL_FILE" >/dev/null 2>&1
@@ -15,27 +16,47 @@ cleanExit() {
 
 scriptHelp() {
   printf "\nCreate or enable an existing user to perform online backups:\n"
-  printf "USAGE: %s --username username [--password password]\n" "$SCRIPT_NAME"
-  printf "\t--username | -u: MariaDB user to create/enable for backups (required)\n"
-  printf "\tIf creating a new user, the password will be read from the 'BACKUP_USER_PASSWORD' environment variable\n"
+  printf "USAGE: %s [--username username] [--password password]\n\n" "$SCRIPT_NAME"
+  printf "If no username is provided, a user will be created corresponding to the values from the '\$BACKUP_USER' and\n"
+  printf "\t'\$BACKUP_USER_PASSWORD' environment variables, the former setting the username and the latter setting the\n"
+  printf "\tpassword.\n"
+  printf "If a username is provided and no corresponding account exists, it will be created using the provided password.\n"
+  printf "\tIf no password is provided, the value of '\$BACKUP_USER_PASSWORD' will be used. If that value is null or\n"
+  printf "\tempty, the script will exit with an error.\n"
+  printf "If a username is provided and an '@localhost' account already exists, the necessary permissions will be\n"
+  printf "\tadded to that account, but NO changes will be made to the account's password.\n"
+  printf "\n"
+  printf "\t--username | -u: MariaDB user to create/enable for backups\n"
+  printf "\t\t(default: \$BACKUP_USER environment variable value)\n"
+  printf "\t--password | -p: Password to use for a newly created account.\n"
+  printf "\t\t(default: \$BACKUP_USER_PASSWORD environment variable value)\n"
   printf "\n"
   exit 0
 }
 
-[ -z "$1" ] && scriptHelp
 while [ $# -gt 0 ]; do
   case "$1" in
   -h | -\? | --help)
   # show help
     scriptHelp
     ;;
+  -p | --password)
+  # specify the password to use
+    if [ -n "$2" ]; then
+      BPASSWORD="$2"
+      shift
+    else
+      printf "\nPassword cannot be null or empty. Omit this parameter to use the default. Exiting.\n\n"
+      exit 1
+    fi
+    ;;
   -u | --username)
     # specify the user to create/enable
     if [ -n "$2" ]; then
-      BACKUP_USERNAME="$2"
+      BUSER="$2"
       shift
     else
-      printf "\nUsername cannot be null or empty. Exiting.\n\n"
+      printf "\nUsername cannot be null or empty. Omit this parameter to use the default. Exiting.\n\n"
       exit 1
     fi
     ;;
@@ -59,30 +80,30 @@ if (! command -v mariadb >/dev/null 2>&1); then \
   exit 1
 fi
 
-if [ "$BACKUP_USERNAME" = "root" ]; then
+if [ "$BUSER" = "root" ]; then
   printf "\nUser 'root' already has appropriate permissions. Exiting.\n\n"
   exit 0
 fi
 
 # check if the backup user's password is set
-if [ -z "$BACKUP_USER_PASSWORD" ]; then \
-  printf "'BACKUP_USER_PASSWORD' environment variable is not set. Exiting.\n\n"
+if [ -z "$BPASSWORD" ]; then \
+  printf "\nBackup user password is null. This is not a safe configuration. Exiting.\n\n"
   exit 1
 fi
 
 # create the SQL temp file
 SQL_FILE="$(mktemp -t ${SCRIPT_NAME}_XXXXXXXX)"
-printf "CREATE USER IF NOT EXISTS \`%s\`@\`localhost\` IDENTIFIED BY '%s';\n" "$BACKUP_USERNAME" "$BACKUP_USER_PASSWORD" >>"$SQL_FILE"
-printf "GRANT RELOAD, PROCESS, LOCK TABLES, BINLOG MONITOR ON *.* TO \`%s\`@\`localhost\`;\n" "$BACKUP_USERNAME" >>"$SQL_FILE"
-printf "GRANT ALTER, INSERT, SELECT on mysql.mariadb_backup_history TO \`%s\`@\`localhost\`;\n" "$BACKUP_USERNAME" >>"$SQL_FILE"
+printf "CREATE USER IF NOT EXISTS \`%s\`@\`localhost\` IDENTIFIED BY '%s';\n" "$BUSER" "$BPASSWORD" >>"$SQL_FILE"
+printf "GRANT RELOAD, PROCESS, LOCK TABLES, BINLOG MONITOR ON *.* TO \`%s\`@\`localhost\`;\n" "$BUSER" >>"$SQL_FILE"
+printf "GRANT ALTER, INSERT, SELECT on mysql.mariadb_backup_history TO \`%s\`@\`localhost\`;\n" "$BUSER" >>"$SQL_FILE"
 printf "FLUSH PRIVILEGES;\n" >>"$SQL_FILE"
 
 # execute the SQL commands
 if (! mariadb <"$SQL_FILE"); then
-  printf "\nERROR: There was an error creating/updating user '%s'.\n\n" "$BACKUP_USERNAME"
+  printf "\nERROR: There was an error creating/updating user '%s'.\n\n" "$BUSER"
   cleanExit 2
 else
-  printf "\nSUCCESS: User '%s' can now perform online backups.\n" "$BACKUP_USERNAME"
+  printf "\nSUCCESS: User '%s' can now perform online backups.\n" "$BUSER"
   printf "\n"
 fi
 
