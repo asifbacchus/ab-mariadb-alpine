@@ -19,7 +19,7 @@
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="GIT_COMMIT" />
-              <option name="value" value="cee9532d96" />
+              <option name="value" value="3a80dcdec4" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="BUILD_DATE" />
