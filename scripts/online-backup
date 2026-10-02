@@ -1,0 +1,154 @@
+#!/bin/sh
+
+#
+# Perform an online full or incremental backup of all databases
+#
+
+scriptHelp() {}
+
+# instantiate variables
+SCRIPT_NAME="$(basename "$0")"
+TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+BACKUP_PATH="/var/mariadb/backup"
+BUSER="$BACKUP_USER"
+BPASSWORD="$BACKUP_USER_PASSWORD"
+BACKUP_TYPE='full'
+BACKUP_INCR_BASE_NAME=''
+BACKUP_HISTORY_NAME="${BACKUP_TYPE}Backup__${TIMESTAMP}"
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -h | -\? | --help)
+    # show help
+    scriptHelp
+    ;;
+  --base-name)
+    # base name to reference
+    if [ -n "$2" ]; then
+      BACKUP_INCR_BASE_NAME="$2"
+      shift
+    else
+      printf "\nBackup base name cannot be null or empty. Exiting.\n\n"
+      exit 1
+    fi
+    ;;
+  -f | --full)
+    # perform a full backup
+    BACKUP_TYPE='full'
+    ;;
+  -i | --incremental)
+    # perform an incremental backup
+    BACKUP_TYPE='incr'
+    ;;
+  -n | --name)
+    # specify the name for this backup's history entry
+    if [ -n "$2" ]; then
+      BACKUP_HISTORY_NAME="$2"
+      shift
+    else
+      printf "\nBackup name cannot be null or empty. Omit this parameter to use the default. Exiting.\n\n"
+      exit 1
+    fi
+    ;;
+  -p | --password)
+    # specify password to use
+    if [ -n "$2" ]; then
+      BPASSWORD="$2"
+      shift
+    else
+      printf "\nPassword cannot be null or empty. Omit this parameter to use the default. Exiting.\n\n"
+      exit 1
+    fi
+    ;;
+  -u | --username)
+  # specify the username to use
+    if [ -n "$2" ]; then
+      BUSER="$2"
+      shift
+    else
+      printf "\nUsername cannot be null or empty. Omit this parameter to use the default. Exiting.\n\n"
+      exit 1
+    fi
+    ;;
+  *)
+    printf "\nUnknown option: %s\n" "$1"
+    printf "Use '--help' for script usage information.\n\n"
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+# preflight checks
+if (! command -v mariadb-backup >/dev/null 2>&1); then \
+  printf "\nMariaDB Backup ('mariadb-backup') not found. Exiting.\n\n"
+  exit 3
+fi
+
+if [ -z "$BACKUP_USER_PASSWORD" ]; then
+  printf "\nThe authentication password cannot be null or empty. Exiting.\n\n"
+  exit 1
+fi
+
+if [ -z "$BACKUP_HISTORY_NAME" ]; then
+  printf "\nPlease provide a name for this backup. Exiting.\n\n"
+  exit 1
+fi
+
+if [ "$BACKUP_TYPE" = 'incr' ] && [ -z "$BACKUP_INCR_BASE_NAME" ]; then
+  printf "\nPlease specify a backup base name when using incremental backup mode. Exiting.\n\n"
+  exit 1
+fi
+
+# create the backup target parent path
+if [ ! -d "$BACKUP_PATH" ]; then
+  \mkdir -p "$BACKUP_PATH" /dev/null 2>&1
+  \chown mysql:mysql "$BACKUP_PATH"
+else
+  printf "ERROR: Unable to create the backup target path: '%s'.\n" "$BACKUP_PATH"
+  printf "\tExiting.\n\n"
+  exit 4
+fi
+
+# perform the backup
+if [ "$BACKUP_TYPE" = 'full' ]; then
+  if (! mariadb-backup --backup \
+      --target-dir=${BACKUP_PATH}/${BACKUP_TYPE}__${TIMESTAMP} --history=${BACKUP_HISTORY_NAME} \
+      --user=${BUSER} --password=${BPASSWORD}); then
+    printf "\nERROR: Unable to perform online backup of databases. Exiting.\n\n"
+    exit 15
+  else
+    printf "SUCCESS: Databases backup completed."
+  fi
+elif [ "$BACKUP_TYPE" = 'incr' ]; then
+  if (
+    ! mariadb-backup --backup \
+      --target-dir=${BACKUP_PATH}/${BACKUP_TYPE}__${TIMESTAMP} \
+      --incremental-history-name=${BACKUP_INCR_BASE_NAME}
+      --history=${BACKUP_HISTORY_NAME} \
+      --user=${BUSER} --password=${BPASSWORD}
+  ); then
+    printf "\nERROR: Unable to perform online backup of databases. Exiting.\n\n"
+    exit 15
+  else
+    printf "SUCCESS: Databases backup completed."
+  fi
+fi
+
+# exit gracefully
+exit 0
+
+### Exit codes: (0-9: Script/System, 10-19: SQL)
+# 0:    Normal exit, no errors.
+# 1:    Script parameter or environment variable set/read incorrectly or
+#         contain invalid values.
+# 2:    Incorrect permissions. For example, the script must be run as root.
+# 3:    Required programs or libraries are missing.
+# 4:    Filesystem error. Example: Cannot create directory, read/write file, etc.
+# 9:    Error in an external script (pre-init, post-init, etc.)
+# 11:   SQL: Error initializing and/or bootstrapping database.
+# 12:   SQL: Error creating, importing, or executing SQL commands.
+# 13:   SQL: Error importing SQL database from a file or script.
+# 15:   SQL: Backup (mariadb-backup or mysqldump) encountered an error.
+
+#EOF
