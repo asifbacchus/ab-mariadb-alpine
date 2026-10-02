@@ -18,6 +18,7 @@ printf "\n\tSQL-related exit codes (10-19):\n"
 printf "\t11:\tError initializing and/or bootstrapping database.\n"
 printf "\t12:\tError creating, importing, or executing SQL commands.\n"
 printf "\t13:\tError importing SQL database from a file or script.\n"
+printf "\t15:\tBackup (mariadb-backup or mysqldump) encountered an error.\n"
 printf "\n"
 
 ### Exit codes: (0-9: Script/System, 10-19: SQL)
@@ -31,5 +32,6 @@ printf "\n"
 # 11:   SQL: Error initializing and/or bootstrapping database.
 # 12:   SQL: Error creating, importing, or executing SQL commands.
 # 13:   SQL: Error importing SQL database from a file or script.
+# 15:   SQL: Backup (mariadb-backup or mysqldump) encountered an error.
 
 #EOF
