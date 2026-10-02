@@ -69,7 +69,7 @@ for f in /docker-entrypoint-preinit.d/*.sh; do
     if [ -s "$f" ]; then
         printf "PRE-INIT: Executing %s\n" "$f"
         if (! /bin/sh "$f"); then
-            exit 2
+            exit 9
         fi
     fi
 done
@@ -87,7 +87,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     # create system tables
     printf "DB-CREATE: Setting up mySQL system tables\n"
     if (! mariadb-install-db --user=mysql --ldata=/var/lib/mysql > /dev/null); then
-        exit 1
+        exit 11
     fi
 
     # statement to create new SQL database
@@ -118,7 +118,7 @@ if [ -z "$(ls -A /var/lib/mysql/ 2> /dev/null)" ]; then
     # execute statements against mariadb and cleanup
     printf "DB-CREATE: Bootstrapping mySQL database\n"
     if (! mariadbd --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$sqlCmd"); then
-        exit 1
+        exit 11
     fi
     shred -u "$sqlCmd"
 else
@@ -134,7 +134,7 @@ for f in /docker-entrypoint-initdb.d/*; do
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
                 if (! mariadbd --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0 < "$f"); then
-                    exit 3
+                    exit 13
                 fi
                 printf "\n"
             fi
@@ -143,7 +143,7 @@ for f in /docker-entrypoint-initdb.d/*; do
             if [ -s "$f" ]; then
                 printf "IMPORT-SQL: Importing %s\n" "$f"
                 if (! gunzip -c "$f" | mariadbd --user=mysql --bootstrap --verbose=0 --skip-name-resolve --skip-networking=0); then
-                    exit 3
+                    exit 13
                 fi
                 printf "\n"
             fi
@@ -158,7 +158,7 @@ for f in /docker-entrypoint-postinit.d/*.sh; do
     if [ -s "$f" ]; then
         printf "POST-INIT: Executing %s\n" "$f"
         if (! /bin/sh "$f"); then
-            exit 4
+            exit 9
         fi
     fi
 done
@@ -185,4 +185,16 @@ case "$1" in
 esac
 
 exit 0
+
+### Exit codes: (0-9: Script/System, 10-19: SQL)
+# 0:    Normal exit, no errors.
+# 1:    Script parameter or environment variable set/read incorrectly or
+#         contain invalid values.
+# 2:    Incorrect permissions. For example, the script must be run as root.
+# 3:    Required programs or libraries are missing.
+# 9:    Error in an external script (pre-init, post-init, etc.)
+# 11:   SQL: Error initializing and/or bootstrapping database.
+# 12:   SQL: Error creating, importing, or executing SQL commands.
+# 13:   SQL: Error importing SQL database from a file or script.
+
 #EOF

@@ -66,12 +66,12 @@ done
 # preflight checks
 if [ "$(id -u)" -ne 0 ]; then
   printf "\nScript must be run as ROOT. Exiting.\n\n"
-  exit 1
+  exit 2
 fi
 
 if (! command -v mariadb >/dev/null 2>&1); then\
   printf "\nMariaDB not found. Exiting.\n\n"
-  exit 1
+  exit 3
 fi
 
 # create the SQL temp file
@@ -81,7 +81,7 @@ SQL_FILE="$(mktemp -t ${SCRIPT_NAME}_XXXXXXXX)"
 printf "%s" "$SQL_BACKUP_HISTORY_TABLE" >"$SQL_FILE"
 if (! mariadb <"$SQL_FILE"); then
   printf "\nERROR: There was an error creating the backup history table.\n\n"
-  cleanExit 2
+  cleanExit 12
 else
   printf "\nSUCCESS: Backup history table has been created.\n"
   printf "\tPlease update backup user permissions for this table accordingly.\n"
@@ -90,3 +90,16 @@ fi
 
 # cleanup and exit gracefully
 cleanExit
+
+### Exit codes: (0-9: Script/System, 10-19: SQL)
+# 0:    Normal exit, no errors.
+# 1:    Script parameter or environment variable set/read incorrectly or
+#         contain invalid values.
+# 2:    Incorrect permissions. For example, the script must be run as root.
+# 3:    Required programs or libraries are missing.
+# 9:    Error in an external script (pre-init, post-init, etc.)
+# 11:   SQL: Error initializing and/or bootstrapping database.
+# 12:   SQL: Error creating, importing, or executing SQL commands.
+# 13:   SQL: Error importing SQL database from a file or script.
+
+#EOF
