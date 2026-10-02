@@ -33,8 +33,9 @@ RUN apk --update --no-cache add \
 # expose ports
 EXPOSE 3306
 
-# create volume if user forgets
+# create volumes if user forgets
 VOLUME ["/var/lib/mysql"]
+VOLUME ["/var/mariadb/backup"]
 
 # basic healthcheck (service only)
 HEALTHCHECK \
