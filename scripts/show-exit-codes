@@ -1,0 +1,33 @@
+#!/bin/sh
+
+#
+# Print script exit codes to the console
+#
+
+printf "\nExit codes used by the utility scripts in the ab-mariadb-alpine container:\n"
+
+printf "\n\tSystem/Script exit codes (0-9):\n"
+printf "\t0:\tNormal exit, no errors\n"
+printf "\t1:\tScript parameter or environment variable set/read incorrectly or contain invalid values.\n"
+printf "\t2:\tIncorrect permissions. For example, the script must be run as root.\n"
+printf "\t3:\tRequired programs or libraries are missing.\n"
+printf "\t9:\tError in an external script (pre-init, post-init, etc.)\n"
+
+printf "\n\tSQL-related exit codes (10-19):\n"
+printf "\t11:\tError initializing and/or bootstrapping database.\n"
+printf "\t12:\tError creating, importing, or executing SQL commands.\n"
+printf "\t13:\tError importing SQL database from a file or script.\n"
+printf "\n"
+
+### Exit codes: (0-9: Script/System, 10-19: SQL)
+# 0:    Normal exit, no errors.
+# 1:    Script parameter or environment variable set/read incorrectly or
+#         contain invalid values.
+# 2:    Incorrect permissions. For example, the script must be run as root.
+# 3:    Required programs or libraries are missing.
+# 9:    Error in an external script (pre-init, post-init, etc.)
+# 11:   SQL: Error initializing and/or bootstrapping database.
+# 12:   SQL: Error creating, importing, or executing SQL commands.
+# 13:   SQL: Error importing SQL database from a file or script.
+
+#EOF
