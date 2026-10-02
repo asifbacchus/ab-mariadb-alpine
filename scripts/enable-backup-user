@@ -8,6 +8,7 @@
 SCRIPT_NAME="$(basename "$0")"
 BUSER="$BACKUP_USER"
 BPASSWORD="$BACKUP_USER_PASSWORD"
+DO_GRANT_CHECK=0
 
 cleanExit() {
   shred -u "$SQL_FILE" >/dev/null 2>&1
@@ -39,6 +40,10 @@ while [ $# -gt 0 ]; do
   -h | -\? | --help)
   # show help
     scriptHelp
+    ;;
+  --check)
+    # check the user's grants
+    DO_GRANT_CHECK=1
     ;;
   -p | --password)
   # specify the password to use
@@ -78,6 +83,17 @@ fi
 if (! command -v mariadb >/dev/null 2>&1); then \
   printf "\nMariaDB not found. Exiting.\n\n"
   exit 3
+fi
+
+# perform the SQL grant check and then exit
+if [ ${DO_GRANT_CHECK} -eq 1 ]; then
+  printf "\n"
+  if (printf "SHOW GRANTS FOR '%s'@localhost;" "$BUSER" | mariadb --silent 2>/dev/null); then
+    exit 0
+  else
+    printf "\nERROR: An error occurred while displaying GRANTS for user '%s'. Exiting.\n\n" "$BUSER"
+    exit 12
+  fi
 fi
 
 if [ "$BUSER" = "root" ]; then
