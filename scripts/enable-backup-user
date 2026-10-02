@@ -85,8 +85,14 @@ if [ "$BUSER" = "root" ]; then
   exit 0
 fi
 
-# check if the backup user's password is set
-if [ -z "$BPASSWORD" ]; then \
+# check if the specified user@localhost exists, thus $BPASSWORD can be empty
+UNAMECHECK=$(
+  printf "SELECT EXISTS(SELECT 1 FROM mysql.user WHERE user = '%s' AND host = 'localhost');" "$BUSER" |
+    mariadb --silent 2>/dev/null
+)
+
+# check if the backup user's password is set, if required
+if [ ${UNAMECHECK} -eq 0 ] && [ -z "$BPASSWORD" ]; then \
   printf "\nBackup user password is null. This is not a safe configuration. Exiting.\n\n"
   exit 1
 fi
