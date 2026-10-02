@@ -116,9 +116,6 @@ cleanExit
 #         contain invalid values.
 # 2:    Incorrect permissions. For example, the script must be run as root.
 # 3:    Required programs or libraries are missing.
-# 9:    Error in an external script (pre-init, post-init, etc.)
-# 11:   SQL: Error initializing and/or bootstrapping database.
 # 12:   SQL: Error creating, importing, or executing SQL commands.
-# 13:   SQL: Error importing SQL database from a file or script.
 
 #EOF
