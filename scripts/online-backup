@@ -85,7 +85,7 @@ if (! command -v mariadb-backup >/dev/null 2>&1); then \
   exit 3
 fi
 
-if [ -z "$BACKUP_USER_PASSWORD" ]; then
+if [ -z "$BPASSWORD" ]; then
   printf "\nThe authentication password cannot be null or empty. Exiting.\n\n"
   exit 1
 fi
