@@ -102,11 +102,15 @@ fi
 
 # create the backup target parent path
 if [ ! -d "$BACKUP_PATH" ]; then
-  \mkdir -p "$BACKUP_PATH" /dev/null 2>&1
-  \chown mysql:mysql "$BACKUP_PATH"
-else
-  printf "ERROR: Unable to create the backup target path: '%s'.\n" "$BACKUP_PATH"
-  printf "\tExiting.\n\n"
+  if ! \mkdir -p "$BACKUP_PATH" /dev/null 2>&1; then
+    printf "ERROR: Unable to create the backup target path: '%s'.\n" "$BACKUP_PATH"
+    printf "\tExiting.\n\n"
+    exit 4
+  fi
+fi
+
+if ! \chown mysql:mysql "$BACKUP_PATH"; then
+  printf "ERROR: Unable to set backup path ownership. Exiting.\n\n"
   exit 4
 fi
 
