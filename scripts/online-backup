@@ -128,7 +128,7 @@ elif [ "$BACKUP_TYPE" = 'incr' ]; then
   if (
     ! mariadb-backup --backup \
       --target-dir=${BACKUP_PATH}/${BACKUP_TYPE}__${TIMESTAMP} \
-      --incremental-history-name=${BACKUP_INCR_BASE_NAME}
+      --incremental-history-name=${BACKUP_INCR_BASE_NAME} \
       --history=${BACKUP_HISTORY_NAME} \
       --user=${BUSER} --password=${BPASSWORD}
   ); then
