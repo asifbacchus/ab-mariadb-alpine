@@ -14,7 +14,7 @@ BUSER="$BACKUP_USER"
 BPASSWORD="$BACKUP_USER_PASSWORD"
 BACKUP_TYPE='full'
 BACKUP_INCR_BASE_NAME=''
-BACKUP_HISTORY_NAME="${BACKUP_TYPE}Backup__${TIMESTAMP}"
+BACKUP_HISTORY_NAME=''
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -90,14 +90,14 @@ if [ -z "$BPASSWORD" ]; then
   exit 1
 fi
 
-if [ -z "$BACKUP_HISTORY_NAME" ]; then
-  printf "\nPlease provide a name for this backup. Exiting.\n\n"
-  exit 1
-fi
-
 if [ "$BACKUP_TYPE" = 'incr' ] && [ -z "$BACKUP_INCR_BASE_NAME" ]; then
   printf "\nPlease specify a backup base name when using incremental backup mode. Exiting.\n\n"
   exit 1
+fi
+
+# set the default backup history name if not specified by the user
+if [ -z "$BACKUP_HISTORY_NAME" ]; then
+  BACKUP_HISTORY_NAME="${BACKUP_TYPE}__${TIMESTAMP}"
 fi
 
 # create the backup target parent path
