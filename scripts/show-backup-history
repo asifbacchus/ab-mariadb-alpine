@@ -1,0 +1,57 @@
+#!/bin/sh
+
+#
+# Display the logged backup history in mariadb
+#
+
+# instantiate variables
+SCRIPT_NAME="$(basename "$0")"
+SQL_CMD="SELECT name, incremental, end_time, innodb_from_lsn, innodb_to_lsn FROM mariadb_backup_history ORDER BY end_time desc, innodb_from_lsn, innodb_to_lsn;"
+scriptHelp() {
+  printf "\nDisplay the online backup history logged by MariaDB.\n"
+  printf "USAGE: %s [--help | -h | -?]" "$SCRIPT_NAME"
+  printf "\n"
+  exit 0
+}
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -h | -\? | --help)
+  # show help
+    scriptHelp
+    ;;
+  *)
+    printf "\nUnknown option: %s\n" "$1"
+    printf "Use '--help' for script usage information.\n\n"
+    exit 1
+    ;;
+  esac
+  shift
+done
+
+# preflight checks
+if [ "$(id -u)" -ne 0 ]; then
+  printf "\nScript must be run as ROOT. Exiting.\n\n"
+  exit 2
+fi
+
+if (! command -v mariadb >/dev/null 2>&1); then \
+  printf "\nMariaDB not found. Exiting.\n\n"
+  exit 3
+fi
+
+# display backup history
+if (printf "%s" "$SQL_CMD" | mariadb mysql --silent --table --pager=less 2>/dev/null); then
+  exit 0
+else
+  printf "\nERROR: An error occurred while displaying the backup history. Exiting.\n\n"
+  exit 12
+fi
+
+### Exit codes: (0-9: Script/System, 10-19: SQL)
+# 0:    Normal exit, no errors.
+# 2:    Incorrect permissions. For example, the script must be run as root.
+# 3:    Required programs or libraries are missing.
+# 12:   SQL: Error creating, importing, or executing SQL commands.
+
+#EOF

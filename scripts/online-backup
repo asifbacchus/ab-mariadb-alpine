@@ -8,7 +8,7 @@ scriptHelp() {}
 
 # instantiate variables
 SCRIPT_NAME="$(basename "$0")"
-TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+TIMESTAMP="$(date -u +"%Y%m%d_%H%M%Sz")"
 BACKUP_PATH="/var/mariadb/backup"
 BUSER="$BACKUP_USER"
 BPASSWORD="$BACKUP_USER_PASSWORD"
