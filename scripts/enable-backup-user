@@ -31,6 +31,7 @@ scriptHelp() {
   printf "\t\t(default: \$BACKUP_USER environment variable value)\n"
   printf "\t--password | -p: Password to use for a newly created account.\n"
   printf "\t\t(default: \$BACKUP_USER_PASSWORD environment variable value)\n"
+  printf "\t--check: Check user permissions (using the provided username)\n"
   printf "\n"
   exit 0
 }
