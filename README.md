@@ -524,7 +524,7 @@ If anyone has suggestions for a better healthcheck, PLEASE let me know!
 
 ## Source
 
-The source for this container build (Dockerfile, entrypoint.sh) are available on my [private git repo](https://git.asifbacchus.app/ab-docker/mariadb-alpine) or on [GitHub](https://github.com/asifbacchus/ab-mariadb-alpine.git). Note that the newest versions will be on my repo and GitHub will be updated at most a few days later. Also, I'd prefer issues be filed on my repo, but I understand if GitHub is easier/more familiar for you.
+The source files for this container build are available on [GitHub](https://github.com/asifbacchus/ab-mariadb-alpine). Please feel free to file any issues with suggestions or bugs you have encountered.
 
 ## Script exit codes
 
