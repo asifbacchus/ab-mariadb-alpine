@@ -2,7 +2,7 @@
   <configuration default="false" name="Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
-        <option name="imageTag" value="docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:2.5.0_11.8.8-r0" />
+        <option name="imageTag" value="docker.asifbacchus.dev/mariadb/ab-mariadb-alpine:2.5.1_11.8.8-r0" />
         <option name="buildArgs">
           <list>
             <DockerEnvVarImpl>
@@ -15,15 +15,15 @@
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="INTERNAL_VERSION" />
-              <option name="value" value="2.5.0" />
+              <option name="value" value="2.5.1" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="GIT_COMMIT" />
-              <option name="value" value="2fe41975f2" />
+              <option name="value" value="e996f6e4a1" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="BUILD_DATE" />
-              <option name="value" value="2026-10-17" />
+              <option name="value" value="2026-10-18" />
             </DockerEnvVarImpl>
           </list>
         </option>
