@@ -4,7 +4,50 @@
 # Perform an online full or incremental backup of all databases
 #
 
-scriptHelp() {}
+scriptHelp() {
+  printf "\nPerform an online database backup using the 'mariadb-backup' tool.\n"
+  printf "USAGE: %s [--parameters]\n\n" "$SCRIPT_NAME"
+
+  printf "If run with NO parameters, the environment variables '\$BACKUP_USER' and '\$BACKUP_USER_PASSWORD' will be used "
+  printf "as the credentials for connecting to MariaDB. If either environment variable is undefined or empty, the script "
+  printf "will terminate with an error. By default, a full online backup will be performed and a timestamp-based label "
+  printf "will be assigned to the backup in the history log."
+  printf "\n\n"
+  printf "ALL backups are stored at '/var/mariadb/backups' within this container. Please ensure host mounts/volumes are set accordingly.\n"
+
+  printf "\nParameters:\n"
+
+  printf "\n"
+  printf -- "--help | -h | -?\n"
+  printf "\tDisplay this help message.\n"
+
+  printf "\n"
+  printf -- "--username | -u\n"
+  printf "\tUsername to use when connecting to MariaDB. By default, \$BACKUP_USER ('backupuser') will be used.\n"
+  printf -- "--password | -p\n"
+  printf "\tPassword to use when connecting to MariaDB. By default, \$BACKUP_USER_PASSWORD will be used.\n"
+
+  printf "\n"
+  printf -- "--full | -f\n"
+  printf "\tPerform a full backup. DEFAULT.\n"
+  printf -- "--incremental | -i\n"
+  printf "\tPerform an incremental backup.\n"
+
+  printf "\n"
+  printf -- "--name | -n\n"
+  printf "\tFriendly name to be used for this backup in the backup logs.\n"
+  printf "\tThis friendly name can be used as a reference for incremental backups, etc.\n"
+  printf "\tIf not specified, a name will be generated using the format: BACKUP_TYPE__TIMESTAMP\n"
+  printf "\t\t e.g. full_20261018_010015z OR incr_20261018_010015z\n"
+
+  printf "\n"
+  printf -- "--base-name\n"
+  printf "\tThe friendly name of the backup to use as a base for an incremental backup.\n"
+  printf "\tREQUIRED for incremental backups.\n"
+
+  printf "\n"
+  exit 0
+}
 
 # instantiate variables
 SCRIPT_NAME="$(basename "$0")"
